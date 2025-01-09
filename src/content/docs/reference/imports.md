@@ -66,4 +66,10 @@ Import directives support various other optional parameters:
 - `limit`: if specified, only at most this many tuples are imported (great for testing when working with large files)
 - `compression`: used to define a compression format (`gzip` or `none`); this will normally be guessed correctly from the file extension, but can be useful for non-standard file names or URLs
 - `delimiter`: only for import format `dsv`, specify a delimiter string (should be a single character)
+- `ignore_headers`: only for import formats `csv`, `dsv`, and `tsv`, if true, the first record (containing the column headers) is ignored
 - `base`: specify the base IRI to be used when importing RDF data; if given, relative IRIs will be made absolute based on this base; otherwise, relative IRIs remain relative in Nemo
+
+The parameters in import directives can also make use of format strings, e.g.,
+```
+@import table :- csv{resource = f"file-{?x}-{?y}.csv"}, ?x = "name", ?y = 42 .
+```
