@@ -28,6 +28,8 @@ that starts at the given index and extends to the end of the string. Optionally,
 - `STRENDS`: checks if the string given as the first parameter ends with the string given as the second parameter
 - `CONTAINS`: checks if the string given as the first parameter contains the string given as the second parameter
 - `REGEX`: checks if the string given as the first parameter matches the regular expression given as second the parameter
+- `URIENCODE`: transforms the given string according to the rules of [RFC 3986, Section 2.1](https://www.rfc-editor.org/rfc/rfc3986#section-2.1), making it suitable for use as part of the query string of a URI by percent-encoding all characters except `-`, `_`, `.`, and `~`.
+- `URIDECODE`: decodes a string transformed by `URIENCODE` back to the original, unencoded version.
 
 ### Format Strings
 
