@@ -9,7 +9,7 @@ Nemo allows importing external data files as predicates. The general syntax for 
 
 Here, `table` denotes the predicate that data is imported to, `csv` is the data format (comma-separated values),
 and `path/to/file.csv` is the path to the file. Instead of a local path, it is also possible to define a URL from
-which data should be downloaded, e.g., `resource = <https://example.org/file.csv>`.
+which data should be downloaded, e.g., `resource = "https://example.org/file.csv"`.
 
 The following formats are currently supported:
 - Delimiter-separated values: `csv`, `tsv` (tab-separated), `dsv` (delimiter required as parameter, e.g., `delimiter=";"`)
