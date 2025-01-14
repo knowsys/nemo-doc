@@ -51,3 +51,8 @@ Besides the above, there are format-specific parameters:
 | `format` | `csv`, `dsv` | The output-format of the exported data. Might be `int`, `double`, `string`, `rdf` or `skip`. |
 
 When using the [Nemo command-line client](/nemo-doc/guides/cli), some cli options are available to override the export directives in the program, to set the output (base) directory, and to control if existing files should be overwritten.
+
+The parameters in export directives can also make use of format strings, e.g.,
+```
+@export table :- csv{resource = f"file-{?x}-{?y}.csv"}, ?x = "name", ?y = 42 .
+```
