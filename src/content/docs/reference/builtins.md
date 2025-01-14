@@ -29,6 +29,14 @@ that starts at the given index and extends to the end of the string. Optionally,
 - `CONTAINS`: checks if the string given as the first parameter contains the string given as the second parameter
 - `REGEX`: checks if the string given as the first parameter matches the regular expression given as second the parameter
 
+### Format Strings
+
+Format strings are denoted with a leading `f` before the double quoted string. They allow for arbitrary expressions to be embedded into the string using curly braces `{}`. Format strings are equivalent to using the `CONCAT` builtin function in combination with `STR` for converting the result of the expressions into strings. 
+
+```
+out(f"result: {?x + ?y}") :- in(?x, ?y) .
+```
+
 ### Functions for language tagged strings
 
 A language-tagged string is a value like `"Hello world"@en`. The function `LANG` can be used to extract the language tag (`en` in the example), whereas `STR` can be used to obtain the lexical value (`"Hello world"`).

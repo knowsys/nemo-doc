@@ -12,7 +12,7 @@ mydata("3.14"^^xsd:double, "2023-06-19"^^xsd:date) .
 ```
 
 However, it is often nicer to use the shortcuts:
-- *Strings* can be written in `"double quotes"` or in `'single quotes'`, and multi-line strings also can be delimited in `"""` and `'''`.
+- *Strings* can be written in `"double quotes 🙂"` and support Unicode.  
 - *Integers* can be written as plain numerals with an optional sign: `42`, `-23`, `+911` all work.
 - *Double precision floats* can be written with decimal point and optional exponent: `3.14`, `.05`, `10.345E6` all work.
 - *Language-tagged strings* are written like in RDF, e.g., `"Dresden"@de` or `ドレスデン@ja`.
