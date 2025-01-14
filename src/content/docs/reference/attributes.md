@@ -5,7 +5,7 @@ title: Attributes
 Attributes are annotations applied to rules that provide additional context or configuration. They are written like this:
 
 ```
-#[atribute_name(parameter_1, parameter_2, ...)]
+#[attribute_name(parameter_1, parameter_2, ...)]
 parent(?p, ?c) :- child(?c, ?p) .
 ```
 
