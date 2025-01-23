@@ -48,7 +48,8 @@ A language-tagged string is a value like `"Hello world"@en`. The function `LANG`
 All standard arithmetic operations, including addition (`+`), subtraction (`-`), multiplication (`*`), and division (`/`), are fully supported. Numeric values can also be compared via the operators `<`, `<=`, `=>`, and `>`.   
 
 In addition, Nemo provides many useful arithmetic functions. Currently, these include the following functions on single input parameters:
-`ABS` (absolute), `SQRT` (square root), `SIN` (sine), `COS` (cosine), `TAN` (tangent), `ROUND` (rounding up or down), `CEIL` (rounding up), `FLOOR` (rounding down). Moreover, the following functions require two parameters:
+`ABS` (absolute), `SQRT` (square root), `SIN` (sine), `COS` (cosine), `TAN` (tangent), `ROUND` (rounding up or down), `CEIL` (rounding up), `FLOOR` (rounding down), 
+and `INVERTSIGN` (multiply by negative one). Moreover, the following functions require two parameters:
 - `LOG(x,y)`: computes the logarithm of x to base y
 - `POW(x,y)`: computes the power of x to the y.
 - `REM(x,y)`: computes the remainder of dividing x by y.
@@ -63,14 +64,18 @@ And finally, the following functions can be called with arbitrary many input par
 - `BITOR(x_1, ..., x_n)`: computes the bitwise "or" of the given arguments
 - `BITXOR(x_1, ..., x_n)`: computes the bitwise "xor" of the given arguments
 
+It is also possible to mix numeric types, which implicitly converts them to 64-bit floating point numbers. For example, `SUM(3 * 4.0, 5, 1.0)` returns the 64-bit floating point number `18.0`.
+
+### Conversion functions
+
 Nemo supports the following conversion functions:
 - `INT`: Convert the given value to an integer. This works for various datatypes (not just numbers), but only for data that already corresponds to an integer. The following all evaluate to `42`: `INT(42)`, `INT(42.0)`, `INT("42")`, `INT("42"^^<http://www.w3.org/2001/XMLSchema#gYear>)`, `INT(ROUND(42.1))`. However, `INT(42.1)` does not return a result.
 - `DOUBLE`: Convert a given value to a double. This function works for various datatypes (not just numbers). For example, the following evaluate to `42.0`: `DOUBLE(42)`, `DOUBLE("42.0")`, `DOUBLE("42").`
 - `FLOAT`: Convert a given value to a float. This is analogous to `DOUBLE` but for 32bit floating point numbers.
+- `IRI`: Convert a string value into an IRI
 
-It is also possible to mix numeric types, which implicitly converts them to 64-bit floating point numbers. For example, `SUM(3 * 4.0, 5, 1.0)` returns the 64-bit floating point number `18.0`.
 
-### Boolean Functions
+### Boolean functions
 
 Nemo supports the usual Boolean functions (`AND`, `OR`, and `NOT`), but requires them to be written in prefix-notation like other functions, e.g., `OR(?X,?Y)` rather than `?X OR ?Y`. 
 
@@ -101,7 +106,7 @@ Built-in functions can be nested arbitrarily. For example, the following is a va
 result(?s) :- temp(?t), ?s = CONCAT(UCASE("temp: "), STR(?t)) .
 ```
 
-***Known restriction in version 0.6.0:***
+***Known restriction in version 0.7:***
 Currently, infix operators are not allowed within nested terms. As a workaround, it is possible to use the prefix-notation for such functions.
 
 | Infix    | Name          |
