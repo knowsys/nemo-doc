@@ -53,6 +53,9 @@ and `INVERTSIGN` (multiply by negative one). Moreover, the following functions r
 - `LOG(x,y)`: computes the logarithm of x to base y
 - `POW(x,y)`: computes the power of x to the y.
 - `REM(x,y)`: computes the remainder of dividing x by y.
+- `BITSHL(x,y)`: computes the bitwise left shift of value x by the base y.
+- `BITSHR(x,y)`: computes the bitwise arithmetic right shift of value x by the base y.
+- `BITSHRU(x,y)`: computes the bitwise logical right shift of value x by the base y.
 
 And finally, the following functions can be called with arbitrary many input parameters:
 - `SUM(x_1, ..., x_n)`: computes the sum of the given arguments
@@ -69,7 +72,7 @@ It is also possible to mix numeric types, which implicitly converts them to 64-b
 ### Conversion functions
 
 Nemo supports the following conversion functions:
-- `INT`: Convert the given value to an integer. This works for various datatypes (not just numbers), but only for data that already corresponds to an integer. The following all evaluate to `42`: `INT(42)`, `INT(42.0)`, `INT("42")`, `INT("42"^^<http://www.w3.org/2001/XMLSchema#gYear>)`, `INT(ROUND(42.1))`. However, `INT(42.1)` does not return a result.
+- `INT`: Convert the given value to an integer. This works for various datatypes (not just numbers), but only for data that already corresponds to an integer. The following all evaluate to `42`: `INT(42)`, `INT(42.0)`, `INT("42")`, `INT("42"^^<http://www.w3.org/2001/XMLSchema#gYear>)`, `INT(ROUND(42.1)), INT("0x2A"), INT("0o52"), INT("0b101010")`. However, `INT(42.1)` does not return a result.
 - `DOUBLE`: Convert a given value to a double. This function works for various datatypes (not just numbers). For example, the following evaluate to `42.0`: `DOUBLE(42)`, `DOUBLE("42.0")`, `DOUBLE("42").`
 - `FLOAT`: Convert a given value to a float. This is analogous to `DOUBLE` but for 32bit floating point numbers.
 - `IRI`: Convert a string value into an IRI
