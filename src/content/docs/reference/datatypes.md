@@ -16,7 +16,7 @@ However, it is often nicer to use the shortcuts:
 - *Integers* can be written as plain numerals with an optional sign: `42`, `-23`, `+911` all work.
 - Binary, Octal and Hexadecimal numbers starting with the respective prefix `0b`, `0o` or `0x` are interpreted as *unsigned integers*.
 - *Double precision floats* can be written with decimal point and optional exponent: `3.14`, `.05`, `10.345E6` all work.
-- *Language-tagged strings* are written like in RDF, e.g., `"Dresden"@de` or `ドレスデン@ja`.
+- *Language-tagged strings* are written like in RDF, e.g., `"Dresden"@de` or `"ドレスデン"@ja`.
 
 For other datatypes, the long form is needed.
 
