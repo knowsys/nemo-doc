@@ -92,7 +92,6 @@ export default defineConfig({
         label: "Language Reference",
         items: [
           { label: "Import", slug: "reference/imports" },
-          { label: "Foo", slug: "reference/foo" },
           { label: "Export", slug: "reference/exports" },
           { label: "Builtin Functions", slug: "reference/builtins" },
           { label: "Datatypes", slug: "reference/datatypes" },
