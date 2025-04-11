@@ -62,7 +62,6 @@ export default defineConfig({
       components: {
         SiteTitle: "./src/components/SiteTitle.astro",
       },
-<<<<<<< HEAD
       sidebar: [
         {
           label: "Guides",
@@ -84,23 +83,6 @@ export default defineConfig({
     }),
     tailwind(),
   ],
-=======
-      {
-        label: "Language Reference",
-        items: [
-          { label: "Import", slug: "reference/imports" },
-          { label: "Export", slug: "reference/exports" },
-          {label :"foo", slug:"reference/foo"},
-          { label: "Builtin Functions", slug: "reference/builtins" },
-          { label: "Datatypes", slug: "reference/datatypes" },
-          { label: "Attributes", slug: "reference/attributes" },
-          { label: "Aggregates", slug: "reference/aggregates" },
-
-        ]
-      },
-    ],
-  }), tailwind()],
->>>>>>> a262231 (Replace React starlight tabs)
   image: { service: passthroughImageService() },
   vite: {
     plugins: [
