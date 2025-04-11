@@ -1,0 +1,24 @@
+---
+// Define the layout of each parameter
+const {parameter} = Astro.props;
+---
+<tr>
+  <td>
+    <div class="parameter-item">
+      <u><code>{parameter.name}</code></u>
+    </div>
+
+    <div class="parameter-item">
+      <span>Accepted type: {parameter.types.map((type) => type.description).join(', ') }</span>
+    </div>
+
+    <div class="parameter-item">
+      <span>Description: {parameter.description}</span>
+    </div>
+    
+    <div class="parameter-item">
+      parameter.example && Example: <code>{parameter.example}</code>
+    </div>
+
+  </td>
+</tr>

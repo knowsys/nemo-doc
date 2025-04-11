@@ -1,0 +1,22 @@
+---
+title: sdf
+---
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import ParameterLayout from '../../../components/parameter_layout.astro';
+import {formats} from '../../lib/formats.ts';
+
+
+
+<Tabs>
+  {formats.map((format) => (
+    <TabItem label={format.name}>
+      <table>
+        <tbody>
+          {format.parameters.map((param) => (
+            <ParameterLayout parameter={param} />
+          ))}
+        </tbody>
+      </table>
+    </TabItem>
+  ))}
+</Tabs>
