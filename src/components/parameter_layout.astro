@@ -1,24 +1,15 @@
 ---
 // Define the layout of each parameter
 const {parameter} = Astro.props;
+import {type Type} from '../content/lib/parameters.ts';
 ---
 <tr>
   <td>
     <div class="parameter-item">
       <u><code>{parameter.name}</code></u>
+      <span set:html={parameter.description}></span>
+      <span>Accepted type(s): {parameter.types.map((type: Type) => type.description).join(', ') }</span>
+      {parameter.example ? <div> Example: <code>{parameter.example}</code></div> : null}
     </div>
-
-    <div class="parameter-item">
-      <span>Accepted type: {parameter.types.map((type) => type.description).join(', ') }</span>
-    </div>
-
-    <div class="parameter-item">
-      <span>Description: {parameter.description}</span>
-    </div>
-    
-    <div class="parameter-item">
-      parameter.example && Example: <code>{parameter.example}</code>
-    </div>
-
   </td>
 </tr>

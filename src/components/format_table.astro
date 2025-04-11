@@ -1,0 +1,26 @@
+---
+import {formats} from '../content/lib/formats.ts'; 
+
+const { direction } = Astro.props;
+
+const filteredFormats = Object.values(formats).filter(
+  (format) => format.io === direction || format.io === 'both'
+);
+---
+
+<table class="w-full table-auto border-separate">
+  <thead>
+    <tr>
+      <th class="pe-8 text-left">Format</th>
+      <th class="text-left">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    {filteredFormats.map((format) => (
+      <tr>
+        <td><code>{format.name}</code></td>
+        <td><span set:html={format.description}></span></td>
+      </tr>
+    ))}
+  </tbody>
+</table>

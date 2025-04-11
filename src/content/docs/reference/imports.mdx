@@ -1,7 +1,10 @@
 ---
 title: Import Directives
 ---
-
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import FormatLayout from '../../../components/format_param_layout.astro';
+import {formats} from '../../lib/formats.ts';
+import FormatTable from '../../../components/format_table.astro';
 
 Import directives are used to import external data resources as predicates.
 
@@ -23,19 +26,8 @@ which data should be downloaded, e.g., `resource = "https://example.org/file.csv
 
 Currently the following formats are supported:
 
-| <span class="pe-8">Format</span> | Description |
-|:-------|-------------|
-| `csv`  | Comma-separated values. |
-| `dsv`  | Delimited separated values. (Like `csv`, but allows specifying different delimiters e.g. `delimiter=";"`) |
-| `tsv` | Tab-separated values. |
-| `rdf` | Generic RDF format. The actual format will be guessed using the file name. |
-| `nquads` | RDF NQuads format. |
-| `trig` | RDF TriG format. |
-| `ntriples` | RDF Ntriples format.|
-| `rdfxml` | RDF/XML format. |
-| `turtle` | RDF Turtle format. |
-| `sparql` | SPARQL query format. |
-| `json` | JSON triples. |
+<FormatTable direction="import" formats={formats} />
+
 ### Format specific notes
 - `nquads`, `trig`: data is always imported in order "graphname, subject, predicate, object"
 - `ntriples`, `rdfxml`, `turtle`: data is always imported in order "subject, predicate, object"
@@ -82,6 +74,19 @@ null                              | (0, type, "null")
 ```
 
 ### Available parameters
+
+<Tabs>
+  {Object.entries(formats).map(([key, format]) => (
+    <TabItem label={format.name}>
+      <table>
+        <tbody>
+          <FormatLayout of={key} class="my-4" />
+        </tbody>
+      </table>
+    </TabItem>
+  ))}
+
+</Tabs>
 
 
 
