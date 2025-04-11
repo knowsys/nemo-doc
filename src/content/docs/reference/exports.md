@@ -16,7 +16,7 @@ For example, the following export writes a CSV file that contains two columns, w
 @export result :- csv{resource="out.csv.gz", format=(string,int,skip)} .
 ```
 
-The output will be gzipped (guessed from file name). Tuples that contain anything other than a string in the first component and an integer in the second will not be exported and ignored silently.
+The output will be gzipped (guessed from file name). Data tuples that contain anything other than a string in the first component and an integer in the second will not be exported and ignored silently.
 
 ## Formats
 
@@ -26,7 +26,8 @@ Currently the following formats are supported:
 |:-------|-------------|
 | `csv`  | Comma-separated values. |
 | `dsv`  | Delimited separated values. (Like `csv`, but allows specifying different delimiters) |
-| `rdf` | Generic RDF format. This chooses either `ntriples` or `nquads` based on the arity of the predicate. |
+| `tsv` | Tab-separated values. |
+| `rdf` | Generic RDF format. The actual format will be guessed using the file name. |
 | `ntriples` | RDF Ntriples format. |
 | `nquads` | RDF NQuads format. |
 | `trig` | RDF TriG format. |
@@ -37,20 +38,20 @@ Currently the following formats are supported:
 
 The following parameters are available for all formats:
 
-| <span class="pe-6">Parameter</span> | Description |
-| :-------- | :---------- |
-| `resource` | The file name to write to. If it contains an extension, this is used to automatically set the `compression` parameter. If set to the empty string `""`, the tuples are directed to the standard output. If omitted, this is set based on the predicate name, file format and compression type: `<predicate-name>.<format>.<compression>`. |
-| `compression` | The compression to use. Currently only `gzip` or `none` is supported. |
-| `limit` | The maximum number of tuples to export. |
+| <span class="pe-6">Parameter</span>| <span class="pe-6">Accepted types</span>| Description |
+| :-------- |  :-------- | :---------- |
+| `resource` | IRI, String|  The file name to write to. If it contains an extension, this is used to automatically set the `compression` parameter. If set to the empty string `""`, the tuples are directed to the standard output. If omitted, this is set based on the predicate name, file format and compression type: `<predicate-name>.<format>.<compression>`. |
+| `compression` | String | The compression to use. Currently only `gzip` or `none` is supported. |
+| `limit` | Number | The maximum number of tuples to export. |
 
 Besides the above, there are format-specific parameters:
 
-| <span class="pe-4">Parameter</span> | Formats | Description |
-| :-------- | :------ | :---------- |
-| `delimiter` | `dsv` | The delimiter to use. |
-| `format` | `csv`, `dsv` | The output-format of the exported data. Might be `int`, `double`, `string`, `rdf` or `skip`. |
+| <span class="pe-4">Parameter</span> | <span class="pe-4">Accepted types</span> | Formats | Description |
+| :-------- | :------ | :------ | :---------- |
+| `delimiter` | Single character | `dsv` | The delimiter to use. |
+| `format` | Tuple, Single value |`csv`, `dsv`, `tsv`, `rdf`,  | The output-format of the exported data. Might be `int`, `double`, `string`, `rdf` or `skip`. |
 
-When using the [Nemo command-line client](/nemo-doc/guides/cli), some cli options are available to override the export directives in the program, to set the output (base) directory, and to control if existing files should be overwritten.
+When using the [Nemo command-line client](/nemo-doc/installation/cli), some cli options are available to override the export directives in the program, to set the output (base) directory, and to control if existing files should be overwritten.
 
 The parameters in export directives can also make use of format strings, e.g.,
 ```

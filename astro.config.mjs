@@ -45,39 +45,58 @@ export default defineConfig({
   site: "https://knowsys.github.io/",
   base,
   outDir: "./dist/nemo-doc",
-  integrations: [
-    starlight({
-      title: "Nemo",
-      customCss: [
-        "./src/tailwind.css",
-        "./src/styles/custom.css",
-        // Fontsource files for to regular and semi-bold font weights.
-        "@fontsource/comfortaa/400.css",
-        "@fontsource/comfortaa/600.css",
-      ],
-      favicon: "/favicon.svg",
-      social: {
-        github: "https://github.com/knowsys/nemo",
+  integrations: [starlight({
+    title: "Nemo",
+    customCss: [
+      "./src/tailwind.css",
+      "./src/styles/custom.css",
+      // Fontsource files for to regular and semi-bold font weights.
+      "@fontsource/comfortaa/400.css",
+      "@fontsource/comfortaa/600.css",
+    ],
+    favicon: "/favicon.svg",
+    social: {
+      github: "https://github.com/knowsys/nemo",
+    },
+    components: {
+      SiteTitle: "./src/components/SiteTitle.astro",
+    },
+    sidebar: [
+      {
+        label: "Introduction",
+        items: [
+          {label: "Introducing Nemo", slug: "intro/welcome"},
+          {label: "Ways of using Nemo", slug: "intro/usage"},
+          {label: "Rule Language", slug: "intro/tour"},
+          {label: "Nemo examples", slug: "intro/examples"},
+          {label: "Nemo research", slug: "intro/research"},
+
+        ]
       },
-      components: {
-        SiteTitle: "./src/components/SiteTitle.astro",
+      {
+        label: "Installation and usage",
+        items: [
+          // Each item here is one entry in the navigation menu.
+          { label: "Nemo in the browser", slug: "installation/browser" },
+          { label: "Installation", slug: "installation/install" },
+          { label: "Command Line", slug: "installation/cli" },
+          { label: "Wasm Integration", slug: "installation/wasm" },
+          { label: "Python API", slug: "installation/python" },
+          { label: "Rust API", slug: "installation/rust" },
+
+        ],
       },
-      sidebar: [
-        {
-          label: "Guides",
-          items: [
-            // Each item here is one entry in the navigation menu.
-            { label: "Installing", slug: "guides/installing" },
-            { label: "Command Line", slug: "guides/cli" },
-            { label: "Rule Language", slug: "guides/tour" },
-            { label: "Browser Integration", slug: "guides/wasm" },
-            { label: "Python API", slug: "guides/python" },
-          ],
-        },
-        {
-          label: "Language Reference",
-          // todo: reorder
-          autogenerate: { directory: "reference" },
+      {
+        label: "Language Reference",
+        items: [
+          { label: "Import", slug: "reference/imports" },
+          { label: "Export", slug: "reference/exports" },
+          { label: "Builtin Functions", slug: "reference/builtins" },
+          { label: "Datatypes", slug: "reference/datatypes" },
+          { label: "Attributes", slug: "reference/attributes" },
+          { label: "Aggregates", slug: "reference/aggregates" },
+
+          ]
         },
       ],
     }),
