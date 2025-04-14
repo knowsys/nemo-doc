@@ -11,13 +11,13 @@ export interface Parameter {
 }
 const IRI: Type = {description: 'IRI'};
 const String: Type = {description: 'String'};
-const Number: Type = {description: 'Number'};
+const Integer: Type = {description: 'Unsigned integer'};
 const Boolean: Type = {description: 'Boolean'};
-const Char: Type = {description: 'Char'};
-const Tuple: Type = {description: 'Tuple'};
-const Value: Type = {description: 'Value'};
-const HeaderMap: Type = {description: 'Map'};
-const ParamMap: Type = {description: 'Map'};
+const Char: Type = {description: 'Character'};
+const Tuple: Type = {description: 'Tuple of Nemo type names'};
+const Value: Type = {description: 'Nemo type name'};
+const HeaderMap: Type = {description: 'Map with key-value pairs that can be of type: String, Constant or Number'};
+const ParamMap: Type = {description: 'Map where each key is of type String, Constant or Number and each value is a (possibly unary) tuple containing Strings, Numbers and Constants.'};
 
 export const resource: Parameter = { 
   name: 'resource', 
@@ -46,13 +46,13 @@ export const compression: Parameter = {
   
 export const limit: Parameter = { 
   name: 'limit', 
-  types: [Number], 
-  description: 'The maximum number of tuples to export. (great for testing when working with large files) '
+  types: [Integer], 
+  description: 'The maximum number of tuples to import. (great for testing when working with large files) '
 };
 
 export const delimiter: Parameter = { 
   name: 'delimiter', 
-  types: [String], 
+  types: [Char], 
   description: 'The delimiter to use. '
 };
 
@@ -65,26 +65,29 @@ export const ignore_headers: Parameter = {
 export const http_headers: Parameter = {
   name: 'http_headers', 
   types: [HeaderMap], 
-  description: 'Each pair is added as HTTP headers when making an HTTP request '
+  description: 'Each pair is added as HTTP headers when making an HTTP request ',
+  example: 'http_headers=(\"Accept-Language\"=\"en-US\",\"Accept-Charset\=\"utf-8\")'
 };
 
 export const http_get_parameters: Parameter = {
   name: 'http_get_parameters', 
   types: [ParamMap], 
   description: 'The map will be flattened into pairs that are appended to the IRI before making an HTTP request ',
-  example: 'http_get_parameters={key1=(val1,val2), key3=val3}'
+  example: 'http_get_parameters={name=\"John Doe\", age=42, parent=(\"Johanna Doe\", \"Josh Doe\")}'
 };
 
 export const http_post_parameters: Parameter = {
   name: 'http_post_parameters', 
   types: [ParamMap], 
-  description: 'The map will be flattened into pairs that are sent as the body of an HTTP POST request '
+  description: 'The map will be flattened into pairs that are sent as the body of an HTTP POST request ',
+  example: 'http_post_parameters={name=\"John Doe\", age=42, parent=(\"Johanna Doe\", \"Josh Doe\")}'
+
 };
 
 export const iri_fragment: Parameter = {
   name: 'iri_fragment', 
   types: [String], 
-  description: 'add a fragment to a <code>resource</code> or <code>endpoint</code> IRI'
+  description: 'A fragment that is appended to a <code>resource</code> or <code>endpoint</code> IRI'
 };
 
 export const base: Parameter = {
@@ -96,7 +99,7 @@ export const base: Parameter = {
 export const endpoint: Parameter = {
   name: 'endpoint', 
   types: [IRI, String], 
-  description: 'Any endpoint that implements the W3C SPARQL standard. '
+  description: 'Any endpoint that supports SPARQL queries.'
 };
 
 export const query: Parameter = {

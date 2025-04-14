@@ -1,11 +1,8 @@
 import {resource, delimiter,format,compression,limit,ignore_headers, http_headers,http_get_parameters,http_post_parameters,iri_fragment, base, endpoint,query ,type Parameter} from './parameters.ts';
-import type { HTMLAttributes } from 'astro/types'
-
 
 function createFormats<T extends Record<K, Format>, K extends string>(o: T) {
   return o
 }
-
 
 export type Direction  = 'import' | 'export' | 'both';
 
@@ -28,7 +25,7 @@ export const formats = createFormats({
     name: `dsv`,
     io: 'both',
     description: 'Delimited separated values. (Like <code>csv</code>, but allows specifying different delimiters e.g. <code>delimiter=";"</code>)',
-    parameters: [delimiter, resource,format,compression,limit,ignore_headers,http_headers,http_get_parameters,http_post_parameters,iri_fragment],
+    parameters: [delimiter,resource,format,compression,limit,ignore_headers,http_headers,http_get_parameters,http_post_parameters,iri_fragment],
   },
 
   tsv : {

@@ -11,7 +11,6 @@ interface Props extends HTMLAttributes<'div'> {
 
 const {of, direction } = Astro.props;
 
-//const { of} = Astro.props;
 const format: Format = formats[of];
 ---
 {checkIODirection(format,direction) && format.parameters.map((param) => ( 
