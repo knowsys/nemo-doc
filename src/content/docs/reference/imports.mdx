@@ -2,9 +2,11 @@
 title: Import Directives
 ---
 import { Tabs, TabItem } from '@astrojs/starlight/components';
-import FormatLayout from '../../../components/format_param_layout.astro';
+import ParameterLayout from '../../../components/parameter_layout.astro';
 import {formats} from '../../lib/formats.ts';
 import FormatTable from '../../../components/format_table.astro';
+
+--- 
 
 Import directives are used to import external data resources as predicates.
 
@@ -26,7 +28,21 @@ which data should be downloaded, e.g., `resource = "https://example.org/file.csv
 
 Currently the following formats are supported:
 
-<FormatTable direction="import" formats={formats} />
+<table class="w-full table-auto border-separate">
+  <thead>
+    <tr>
+      <th class="pe-8 text-left w-32 whitespace-nowrap">Format</th>
+      <th class="text-left">Parameters</th>
+    </tr>
+  </thead>
+  <tbody>
+    {Object.entries(formats).map(([key, format]) => (
+        <FormatTable of={key} direction='import' />
+      ))}
+  </tbody>
+</table>
+
+
 
 ### Format specific notes
 - `nquads`, `trig`: data is always imported in order "graphname, subject, predicate, object"
@@ -80,12 +96,11 @@ null                              | (0, type, "null")
     <TabItem label={format.name}>
       <table>
         <tbody>
-          <FormatLayout of={key} class="my-4" />
+          <ParameterLayout of={key} direction='import'/>
         </tbody>
       </table>
     </TabItem>
   ))}
-
 </Tabs>
 
 

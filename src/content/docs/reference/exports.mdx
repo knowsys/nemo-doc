@@ -2,7 +2,7 @@
 title: Export Directives
 ---
 import { Tabs, TabItem } from '@astrojs/starlight/components';
-import FormatLayout from '../../../components/format_param_layout.astro';
+import ParameterLayout from '../../../components/parameter_layout.astro';
 import {formats} from '../../lib/formats.ts';
 import FormatTable from '../../../components/format_table.astro';
 
@@ -26,7 +26,19 @@ The output will be gzipped (guessed from file name). Tuples that contain anythin
 
 Currently the following formats are supported:
 
-<FormatTable direction="export" formats={formats} />
+<table class="w-full table-auto border-separate">
+  <thead>
+    <tr>
+      <th class="pe-8 text-left w-32 whitespace-nowrap">Format</th>
+      <th class="text-left">Parameters</th>
+    </tr>
+  </thead>
+  <tbody>
+    {Object.entries(formats).map(([key, format]) => (
+        <FormatTable of={key} direction='export' />
+      ))}
+  </tbody>
+</table>
 
 ### Available parameters
 
@@ -35,12 +47,11 @@ Currently the following formats are supported:
     <TabItem label={format.name}>
       <table>
         <tbody>
-          <FormatLayout of={key} class="my-4" />
+          <ParameterLayout of={key} direction='export' />
         </tbody>
       </table>
     </TabItem>
   ))}
-
 </Tabs>
 
 When using the [Nemo command-line client](/nemo-doc/guides/cli), some cli options are available to override the export directives in the program, to set the output (base) directory, and to control if existing files should be overwritten.

@@ -71,7 +71,8 @@ export const http_headers: Parameter = {
 export const http_get_parameters: Parameter = {
   name: 'http_get_parameters', 
   types: [ParamMap], 
-  description: 'The map will be flattened into pairs that are appended to the IRI before making an HTTP request '
+  description: 'The map will be flattened into pairs that are appended to the IRI before making an HTTP request ',
+  example: 'http_get_parameters={key1=(val1,val2), key3=val3}'
 };
 
 export const http_post_parameters: Parameter = {

@@ -7,9 +7,11 @@ function createFormats<T extends Record<K, Format>, K extends string>(o: T) {
 }
 
 
+export type Direction  = 'import' | 'export' | 'both';
+
 export interface Format {
     name: string,
-    io: 'import' | 'export' | 'both',
+    io: Direction,
     description: string,
     parameters: Parameter[],
 }
@@ -91,6 +93,8 @@ export const formats = createFormats({
     description: 'JSON triples.',
     parameters: [resource,format,compression,http_headers,http_get_parameters,http_post_parameters,iri_fragment], 
   },
-
 });
 
+export function checkIODirection(format: Format, direction: Direction): boolean{
+ return format.io === direction || format.io === 'both';
+}
