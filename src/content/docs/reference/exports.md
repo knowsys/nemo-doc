@@ -50,7 +50,7 @@ Besides the above, there are format-specific parameters:
 | `delimiter` | `dsv` | The delimiter to use. |
 | `format` | `csv`, `dsv` | The output-format of the exported data. Might be `int`, `double`, `string`, `rdf` or `skip`. |
 
-When using the [Nemo command-line client](/nemo-doc/guides/cli), some cli options are available to override the export directives in the program, to set the output (base) directory, and to control if existing files should be overwritten.
+When using the [Nemo command-line client](/nemo-doc/installation/cli), some cli options are available to override the export directives in the program, to set the output (base) directory, and to control if existing files should be overwritten.
 
 The parameters in export directives can also make use of format strings, e.g.,
 ```

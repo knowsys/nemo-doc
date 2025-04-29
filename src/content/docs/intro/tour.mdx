@@ -1,6 +1,7 @@
 ---
 title: Nemo's rule language
 ---
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 Nemo is controlled by programs in a simple rule language, where a *rule* is a basic "if-then" statement that describes how new information is derived from given information. For example, the following rule states that adults are persons who are at least 18 years old (the "then" part is on the left of `:-`, as is common in logic programming):
 
@@ -8,7 +9,7 @@ Nemo is controlled by programs in a simple rule language, where a *rule* is a ba
 adult(?X) :- person(?X), age(?X,?age), ?age >= 18.
 ```
 
-Rules are meaningful and can be read by humans: If you know what `person` and `age` represent in your application, then you can understand the above rule, no matter what other rules you use, which order you write them in, or how the rules may depend on the outputs of other rules. The emphasis is on what you want to do rather than how it needs to be realized on a technical level, whether you run Nemo [as a command-line client](/nemo-doc/guides/cli) or [in your browser](https://tools.iccl.inf.tu-dresden.de/nemo). In other words, Nemo is *fully declarative*.
+Rules are meaningful and can be read by humans: If you know what `person` and `age` represent in your application, then you can understand the above rule, no matter what other rules you use, which order you write them in, or how the rules may depend on the outputs of other rules. The emphasis is on what you want to do rather than how it needs to be realized on a technical level, whether you run Nemo [as a command-line client](/nemo-doc/installation/cli) or [in your browser](https://tools.iccl.inf.tu-dresden.de/nemo). In other words, Nemo is *fully declarative*.
 
 In addition, Nemo integrates modern language features. You can use Unicode characters in all your data and identifiers, process URIs and abbreviate them with namespace prefixes, and load data from many file formats. This is also why Nemo deviates from the traditional Prolog-style logic programming syntax in some places.
 
@@ -18,18 +19,30 @@ The following page describes the main features of the Nemo rule language step by
 
 The core of Nemo is the well-known rule language Datalog (see [Wikipedia](https://en.wikipedia.org/wiki/Datalog)), which allows us to write programs (=sets of rules) like the following:
 
-```
-% Facts:
-father(alice, bob).
-mother(bob, carla).
-father(bob, darius).
+<Tabs>
+  <TabItem label="code" icon="seti:html">
+    ```
+  % Facts:
+  father(alice, bob).
+  mother(bob, carla).
+  father(bob, darius).
 
-% Rules:
-parent(?X, ?Y) :- mother(?X, ?Y) .
-parent(?X, ?Y) :- father(?X, ?Y) .
-```
+  % Rules:
+  parent(?X, ?Y) :- mother(?X, ?Y) .
+  parent(?X, ?Y) :- father(?X, ?Y) .
+  ``` 
+  </TabItem>
+  <TabItem label="result" icon="seti:csv">
+    | parent  |       |       |
+    |---------|:-----:|:-----:|
+    |         | alice | bob   |
+    |         | bob | carla   |
+    |         | bob | darius  |
+  </TabItem>
+</Tabs>
 
-***Hint:*** You can try out this example, and all the other examples below, at [Nemo's public online demo page](https://tools.iccl.inf.tu-dresden.de/nemo/). Of course, it will also work in the [Nemo client](/nemo-doc/guides/installing), if you have it installed.
+
+***Hint:*** You can try out this example, and all the other examples below, at [Nemo's public online demo page](https://tools.iccl.inf.tu-dresden.de/nemo/). Of course, it will also work in the [Nemo client](/nemo-doc/installation/cli), if you have it installed.
 
 Note that all statements end with a full stop `.`, whereas whitespace and linebreaks are often not important.
 Anything from `%` to the end of the current line is a comment.
@@ -70,7 +83,7 @@ Before diving into further expressive features, it is useful to know how to writ
 
 There are three basic forms for predicate names and abstract constant names in Nemo:
 - `alice`, `mother`: Simple string names that can start with a letter and that may also contain numbers or `_`
-- `<http://www.wikidata.org/entity/Q1172264>`: Complete [IRIs](https://en.wikipedia.org/wiki/Internationalized_Resource_Identifier) of whatever form IRIs are allowed to take (this is not limited to URLs but can also be something like <tel:+12-3456-789>, and is not restricted to existing protocols like `http` or `tel`).
+- `<http://www.wikidata.org/entity/Q1172264>`: Complete [IRIs](https://en.wikipedia.org/wiki/Internationalized_Resource_Identifier) of whatever form IRIs are allowed to take (this is not limited to URLs but can also be something like `<tel:+12-3456-789>`, and is not restricted to existing protocols like `http` or `tel`).
 - `wikidata:Q1172264`: A prefixed name that abbreviates a long IRI. For this to work, the prefix must have been declared in the file, for example like this:
   ```
   @prefix wikidata: <http://www.wikidata.org/entity/> .
@@ -109,6 +122,18 @@ Nemo allows importing external data files as predicates. The general syntax for 
 Here, `table` denotes the predicate that data is imported to, `csv` is the data format (comma-separated values),
 and `path/to/file.csv` is the path to the file. Instead of a local path, it is also possible to define a URL from
 which data should be downloaded, e.g., `resource = <https://example.org/file.csv>`.
+
+Nemo also supports [SPARQL](https://www.w3.org/TR/sparql11-query/) queries. This allows to retrieve specific information from online knowledge bases. For example the rule below will retrieve the number of all humans listed in [Wikidata](https://www.wikidata.org/wiki/Wikidata:Main_Page) and assign the data to the predicate `nr_humans`.
+```
+@import nr_humans :- sparql{endpoint = "https://query.wikidata.org/sparql", query="""
+    PREFIX wd: <http://www.wikidata.org/entity/>
+    PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+    SELECT (COUNT(*) AS ?count)
+    WHERE {
+    ?item wdt:P31 wd:Q5 .
+    }"""
+} .
+```
 
 The section on [importing data](/nemo-doc/reference/imports) provides information on the supported data formats and additional features of the `@import` directive.
 
