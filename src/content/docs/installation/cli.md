@@ -48,3 +48,6 @@ This results in the following traces being produced:
  │  └─ e(2, 3)
  └─ a(3)
 ```
+If you want to trace facts that contain strings, you need to escape the strings properly.
+On Unix systems, both
+`--trace 'p("a","b")'` and `--trace "p(\"a\",\"b\")"` are recommended options.

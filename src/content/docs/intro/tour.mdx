@@ -89,7 +89,15 @@ There are three basic forms for predicate names and abstract constant names in N
   @prefix wikidata: <http://www.wikidata.org/entity/> .
   ```
 
-Internally, Nemo treats all of these as IRIs. Prefixed names are expanded by concatenating prefix and local name (so `wikidata:Q1172264` would be another way of writing `<http://www.wikidata.org/entity/Q1172264>`, and simple string names are interpreted as *relative* IRIs (so `alice` would be another way of writing `<alice>`). You can write your predicate names and constants as you prefer, or use own prefixes as a mere way of adding some "namespaces" to your identifiers.
+Internally, Nemo treats all of these as IRIs. Prefixed names are expanded by concatenating prefix and local name (so `wikidata:Q1172264` would be another way of writing `<http://www.wikidata.org/entity/Q1172264>`), and simple string names are interpreted as *relative* IRIs (so `alice` would be another way of writing `<alice>`). You can write your predicate names and constants as you prefer, or use own prefixes as a mere way of adding some "namespaces" to your identifiers.
+If you want to use a default prefix for all non-absolute predicate names and non-absolute literals, use the `@base` notation:
+```
+@base <http://www.wikidata.org/entity/>.
+animal("dog","cat").
+<test>(<mouse>,<turtle>).
+```
+In the example above, the first fact will be expanded to `http://www.wikidata.org/entity/animal("http://www.wikidata.org/entity/dog","http://www.wikidata.org/entity/cat")`, while the second fact remains `test(mouse, turtle)` because both the predicate name and literals are absolute.
+
 
 ### Values of other datatypes
 
