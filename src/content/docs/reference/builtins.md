@@ -6,7 +6,7 @@ title: Builtin Functions
 ### General-purpose functions
 
 The following functions can be meaningfully used on data of arbitrary types:
-- `DATATYPE` returns the datatype of the value. For IRIs (and constant), the type is reported as `http://www.w3.org/2001/XMLSchema#anyURI`. For language-tagged strings, the type is `http://www.w3.org/1999/02/22-rdf-syntax-ns#langString`. As of Nemo v0.5.0, named nulls (blank nodes) have no defined type and `DATATYPE` does not return a valid result for such value. Moreover, the datatype is currently returned as a string, but will be an IRI in future versions ([#463](https://github.com/knowsys/nemo/issues/463)).
+- `DATATYPE` returns the datatype of the value. For IRIs (and constant), the type is reported as `http://www.w3.org/2001/XMLSchema#anyURI`. For language-tagged strings, the type is `http://www.w3.org/1999/02/22-rdf-syntax-ns#langString`. As of Nemo v0.5.0, named nulls (blank nodes) have no defined type and `DATATYPE` does not return a valid result for such value. 
 - `STR` returns the value as a string. For IRIs, this is the IRI string itself. For all other datatypes, this is the canonical form of the lexical value (without any datatype).
 - `fullStr` returns the value as a string that is formatted as in RDF. Such stings would also be correct ways of writing the value in a Nemo rules file (though there might be shorter ways due to Nemo's abbreviations).
 
@@ -14,7 +14,7 @@ Further, it is possible to compare any values using `=` or `!=`.
 
 ### Functions for strings
 
-Nemo supports the following functions on strings.
+Nemo supports the following functions on plain strings and language tagged string. The behavior of the functions closely follows the [SPARQL recommendations](https://www.w3.org/TR/sparql11-query/#func-strings).
 - `STRLEN`: computes the (integer) length of a string
 - `UCASE` and `LCASE`: convert a string to upper case and lower case, respectively
 - `CONCAT`: creates a new string by concatenating the input strings
@@ -42,7 +42,9 @@ out(f"result: {?x + ?y}") :- in(?x, ?y) .
 
 ### Functions for language tagged strings
 
-A language-tagged string is a value like `"Hello world"@en`. The function `LANG` can be used to extract the language tag (`en` in the example), whereas `STR` can be used to obtain the lexical value (`"Hello world"`).
+A language tagged string is a value like `"Hello world"@en`. The function `LANG` can be used to extract the language tag (`en` in the example), whereas `STR` can be used to obtain the lexical value (`"Hello world"`).  
+All [string functions](#functions-for-strings) can be used on language tagged strings. 
+Most importantly, binary functions return no result if the two language tags are not identical. For example, `CONTAINS("foo"@en, "foo"@gr)` will return no result. This behavior, including any edge cases are described in the [SPARQL recommendations](https://www.w3.org/TR/sparql11-query/#func-strings) in more detail.
 
 ### Functions for numbers
 
