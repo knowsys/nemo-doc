@@ -1,10 +1,9 @@
 ---
 title: Import Directives
 ---
-import { Tabs, TabItem } from '@astrojs/starlight/components';
-import ParameterLayout from '../../../components/parameter_layout.astro';
-import {formats} from '../../lib/formats.ts';
-import FormatTable from '../../../components/format_table.astro';
+import {formats} from '@lib/formats';
+import DisplayFormats from '@components/display_formats.astro';
+import DisplayParameters from '@components/display_parameters.astro';
 
 --- 
 
@@ -28,19 +27,7 @@ which data should be downloaded, e.g., `resource = "https://example.org/file.csv
 
 Currently the following formats are supported:
 
-<table class="w-full table-auto border-separate">
-  <thead>
-    <tr>
-      <th class="pe-8 text-left w-32 whitespace-nowrap">Format</th>
-      <th class="text-left">Parameters</th>
-    </tr>
-  </thead>
-  <tbody>
-    {Object.entries(formats).map(([key, format]) => (
-        <FormatTable of={key} direction='import' />
-      ))}
-  </tbody>
-</table>
+<DisplayFormats formats={formats} direction="import" />
 
 
 
@@ -91,19 +78,7 @@ null                              | (0, type, "null")
 
 ### Available parameters
 
-<Tabs>
-  {Object.entries(formats).map(([key, format]) => (
-    <TabItem label={format.name}>
-      <table>
-        <tbody>
-          <ParameterLayout of={key} direction='import'/>
-        </tbody>
-      </table>
-    </TabItem>
-  ))}
-</Tabs>
-
-
+<DisplayParameters formats={formats} direction="import" />
 
 #### The `format` parameter
 

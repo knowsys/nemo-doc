@@ -1,0 +1,34 @@
+---
+import  { type formats as formatsType, type Format, supportsDirection,type Direction } from '@lib/formats';
+
+interface Props {
+  formats: typeof formatsType;
+  direction: Direction;
+}
+
+const { formats, direction } = Astro.props;
+---
+<table class="w-full table-auto border-separate">
+  <thead>
+    <tr>
+      <th class="pe-8 text-left w-32 whitespace-nowrap">Format</th>
+      <th class="text-left">Parameters</th>
+    </tr>
+  </thead>
+  <tbody>
+    {
+    (Object.keys(formats) as (keyof typeof formats)[]).map((key) => {
+
+      // Specify the styling of each format
+      const format: Format = formats[key];
+      return supportsDirection(format, direction) && (
+        <tr>
+          <td><code>{format.name}</code></td>
+          <td><span set:html={format.description}></span></td>
+        </tr>
+      );
+    })}
+  </tbody>
+</table>
+
+

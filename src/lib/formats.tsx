@@ -1,4 +1,4 @@
-import {resource, delimiter,format,compression,limit,ignore_headers, http_headers,http_get_parameters,http_post_parameters,iri_fragment, base, endpoint,query ,type Parameter} from './parameters.ts';
+import {resource, delimiter,format,compression,limit,ignore_headers, http_headers,http_get_parameters,http_post_parameters,iri_fragment, base, endpoint,query ,type Parameter} from './parameters.tsx';
 
 function createFormats<T extends Record<K, Format>, K extends string>(o: T) {
   return o
@@ -92,6 +92,6 @@ export const formats = createFormats({
   },
 });
 
-export function checkIODirection(format: Format, direction: Direction): boolean{
+export function supportsDirection(format: Format, direction: Direction): boolean{
  return format.io === direction || format.io === 'both';
 }
