@@ -124,5 +124,14 @@ export default defineConfig({
         },
       }),
     ],
+    resolve: {
+      alias: {
+        '@assets': '/src/assets',
+        '@lib': '/src/lib',
+        '@components': '/src/components',
+        '@layouts': '/src/layouts',
+        '@pages': '/src/pages',
+      },
+    },
   },
 });

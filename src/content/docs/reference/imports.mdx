@@ -1,22 +1,53 @@
 ---
 title: Import Directives
 ---
+import {formats} from '@lib/formats';
+import DisplayFormats from '@components/display_formats.astro';
+import DisplayParameters from '@components/display_parameters.astro';
 
-Nemo allows importing external data files as predicates. The general syntax for this is as follows:
-```
-@import table :- csv{resource = "path/to/file.csv"} .
-```
+--- 
 
-Here, `table` denotes the predicate that data is imported to, `csv` is the data format (comma-separated values),
-and `path/to/file.csv` is the path to the file. Instead of a local path, it is also possible to define a URL from
+Import directives are used to import external data resources as predicates.
+
+## Syntax
+The general syntax of an import statement is as follows:
+```
+@import <predicate> :- <format>{<parameter>=<value>, ...} .
+```
+In the example below `table` denotes the predicate that data is imported to, `csv` is the data format (comma-separated values),
+and `path/to/file.csv` is the relative path to the file. Instead of a local path, it is also possible to define a URL from
 which data should be downloaded, e.g., `resource = "https://example.org/file.csv"`.
 
-The following formats are currently supported:
-- Delimiter-separated values: `csv`, `tsv` (tab-separated), `dsv` (delimiter required as parameter, e.g., `delimiter=";"`)
-- RDF triples: `ntriples` (NT), `turtle` (Turtle), `rdfxml` (RDF/XML); data is always imported in order "subject, predicate, object"
-- RDF quads: `nquads` (NQuads), `trig` (TRiG); data is always imported in order "graphname, subject, predicate, object"
-- General RDF: `rdf` can be used for RDF that is not further specified; the actual format will be guessed using the file name and predicate arity
-- (experimental - not yet in 0.5) JSON objects: `json` deserializes json data into a table representation consisting of triples of the form "object-id, key, object-id" (see table below, how each json type is represented). The root object of the document always has object-id 0. Furthermore, for each object-id a triple of the form "object-id, `<type>`, type-id" is stored, where type-id is one of `"object"`, `"array"`, `"string"`, `"number"`, `"bool"` or `"null"`. Literal values will be assigned an object-id as well, with a triple of the form "object-id, `<value>`, literal-value"
+```
+@import table :- csv { resource="path/to/file.csv", format=(int,string, any)}.
+```
+
+
+## Formats
+
+Currently the following formats are supported:
+
+<DisplayFormats formats={formats} direction="import" />
+
+
+
+### Format specific notes
+- `nquads`, `trig`: data is always imported in order "graphname, subject, predicate, object"
+- `ntriples`, `rdfxml`, `turtle`: data is always imported in order "subject, predicate, object"
+- `sparql`: can be used to make a `query` following the [SPARQL](https://www.w3.org/TR/sparql11-query/) syntax to a specific `endpoint`.  For example, the import statement below will retrieve the number of humans that are known to [Wikidata](https://www.wikidata.org/wiki/Wikidata:Main_Page):
+    ```
+    @import nr_humans :- sparql{endpoint = <https://query.wikidata.org/sparql>, query="""
+        PREFIX wd: <http://www.wikidata.org/entity/>
+        PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+        SELECT (COUNT(*) AS ?count)
+        WHERE {
+        ?item wdt:P31 wd:Q5 .
+        }"""
+    } .
+    ```
+- `json`: data is deserialized into a table representation consisting of triples of the form "object-id, key, object-id"
+ (see table below, how each json type is represented).   
+ The root object of the document always has object-id 0. Furthermore, for each object-id a triple of the form "object-id, `<type>`, type-id" is stored, where type-id is one of `"object"`, `"array"`, `"string"`, `"number"`, `"bool"` or `"null"`. Literal values will be assigned an object-id as well, with a triple of the form "object-id, `<value>`, literal-value"
 
 ```
 JSON                              | nemo
@@ -45,8 +76,15 @@ true                              | (0, type, "bool"),
 null                              | (0, type, "null")
 ```
 
-Some formats, such as CSV, do not specify how values in the file should be interpreted. By default, Nemo will heuristically interpret data.
-For example, in CSV files, the string `123` will be interpreted as an integer, but the string `abc` as a constant name (relative IRI). To control this in more detail, the parameter `format` can be used. It takes a list of format strings, like in the following example:
+### Available parameters
+
+<DisplayParameters formats={formats} direction="import" />
+
+#### The `format` parameter
+
+Some import formats, such as `csv`, do not specify how values in the file should be interpreted. By default, Nemo will heuristically interpret data.
+For example, in CSV files, the string `123` will be interpreted as an integer, but the string `abc` as a constant name (relative IRI). 
+To control this in more detail, the parameter `format` can be used. It takes a list of format strings, like in the following example:
 
 ```
 @import data :- csv{resource="file.csv", format=(string,string,int,any)} .
@@ -62,14 +100,8 @@ This example imports from a CSV file that should have four columns: the first tw
 
 The same formats can be used in RDF imports as well. RDF has a more precise type system, where every value has an unambiguous type. The formats then mainly act as filters that will remove triples that do not fit (e.g., to load only triples with integer values). For converting values to other datatypes, e.g., from integers to strings, rules with built-in functions (in this case `STR`) can be used after import.
 
-Import directives support various other optional parameters:
-- `limit`: if specified, only at most this many tuples are imported (great for testing when working with large files)
-- `compression`: used to define a compression format (`gzip` or `none`); this will normally be guessed correctly from the file extension, but can be useful for non-standard file names or URLs
-- `delimiter`: only for import format `dsv`, specify a delimiter string (should be a single character)
-- `ignore_headers`: only for import formats `csv`, `dsv`, and `tsv`, if true, the first record (containing the column headers) is ignored
-- `base`: specify the base IRI to be used when importing RDF data; if given, relative IRIs will be made absolute based on this base; otherwise, relative IRIs remain relative in Nemo
-
-The parameters in import directives can also make use of format strings, e.g.,
+## Fstrings
+Fstrings are supported in the import statement as can be seen in the example below:
 ```
 @import table :- csv{resource = f"file-{?x}-{?y}.csv"}, ?x = "name", ?y = 42 .
 ```
