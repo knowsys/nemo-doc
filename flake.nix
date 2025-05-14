@@ -56,6 +56,7 @@
 
               (
                 {
+                  lib,
                   config,
                   dream2nix,
                   ...
@@ -69,10 +70,6 @@
                     dream2nix.modules.dream2nix.nodejs-granular-v3
                   ];
 
-                  env = {
-                    ASTRO_TELEMETRY_DISABLED = 1;
-                  };
-
                   mkDerivation = {
                     src = ./.;
 
@@ -83,14 +80,50 @@
 
                       runHook postInstall
                     '';
+
+                    nativeBuildInputs = [ config.deps.pagefind ];
                   };
+
+                  deps =
+                    { nixpkgs, ... }:
+                    {
+                      inherit (nixpkgs) nodejs pagefind writeShellApplication;
+                    };
 
                   nodejs-package-lock-v3 = {
                     packageLockFile = "${config.mkDerivation.src}/package-lock.json";
                   };
 
                   nodejs-granular-v3 = {
-                    buildScript = "NODE_OPTIONS=--max_old_space_size=4096 npm run build";
+                    buildScript =
+                      let
+                        # wrap npx, since the starlight integration
+                        # insists on invoking pagefind by calling `npx
+                        # -y pagefind […]`, which breaks in the
+                        # sandbox, as the registry is unavailable.
+                        npx = config.deps.writeShellApplication {
+                          name = "npx";
+
+                          runtimeInputs = [
+                            config.deps.nodejs
+                          ];
+
+                          text = ''
+                            if [ "$2" = "pagefind" ]; then
+                              /build/package/.bin/pagefind "''${@:3}"
+                            else
+                              ${config.deps.nodejs}/bin/npx "$@"
+                            fi
+                          '';
+                        };
+                      in
+                      ''
+                        export NODE_OPTIONS=--max_old_space_size=4096
+                        export ASTRO_TELEMETRY_DISABLED=1
+                        export PATH="${npx}/bin:''${PATH}"
+
+                        npm --offline run build
+                      '';
                   };
                 }
               )
@@ -110,8 +143,10 @@
                   ];
 
                   text = ''
+                    export ASTRO_TELEMETRY_DISABLED=1
+
                     cd ${self.packages.${pkgs.system}.nemo-doc}/lib/node_modules/nemo-doc/
-                    noed_modules/astro/astro.js preview
+                    node_modules/astro/astro.js preview
                   '';
                 };
               };
@@ -174,14 +209,21 @@
 
                   env = {
                     ASTRO_TELEMETRY_DISABLED = 1;
+                    PAGEFIND_BINARY_PATH = lib.getExe config.deps.pagefind;
                   };
+
+                  deps =
+                    { nixpkgs, ... }:
+                    {
+                      inherit (nixpkgs) nodejs pagefind;
+                      inherit (nixpkgs.nodePackages) prettier;
+                    };
 
                   mkDerivation = {
                     src = ./.;
 
                     nativeBuildInputs = lib.attrValues {
-                      inherit (pkgs) nodejs;
-                      inherit (pkgs.nodePackages) prettier;
+                      inherit (config.deps) nodejs pagefind prettier;
                     };
 
                     buildPhase = "mkdir $out";
