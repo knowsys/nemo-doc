@@ -40,11 +40,6 @@
           npmMeta = builtins.fromJSON (builtins.readFile ./package.json);
           inherit (npmMeta) version;
 
-          # meta = {
-          #   inherit description;
-          #   homepage = npmMeta.repository.url;
-          # };
-
           paths = {
             paths = {
               projectRoot = ./.;
@@ -61,7 +56,6 @@
 
               (
                 {
-                  lib,
                   config,
                   dream2nix,
                   ...
@@ -74,6 +68,10 @@
                     dream2nix.modules.dream2nix.nodejs-package-lock-v3
                     dream2nix.modules.dream2nix.nodejs-granular-v3
                   ];
+
+                  env = {
+                    ASTRO_TELEMETRY_DISABLED = 1;
+                  };
 
                   mkDerivation = {
                     src = ./.;
@@ -113,7 +111,7 @@
 
                   text = ''
                     cd ${self.packages.${pkgs.system}.nemo-doc}/lib/node_modules/nemo-doc/
-                    node_modules/astro/astro.js preview
+                    noed_modules/astro/astro.js preview
                   '';
                 };
               };
@@ -121,6 +119,25 @@
             {
               inherit nemo-doc-preview;
               default = nemo-doc-preview;
+
+              check-links =
+                let
+                  ignoreUrls = [
+                    "http://xmlns.com/foaf/spec/" # no HTTPS
+                    "https://knowsys.github.io/nemo-doc/404/" # returns 404 by design
+                  ];
+                in
+                utils.lib.mkApp {
+                  drv = pkgs.writeShellScriptBin "check-links" ''
+                    LANG="C.UTF-8" ${pkgs.html-proofer}/bin/htmlproofer \
+                    --allow-hash-href \
+                    --assume-extension \
+                    --empty-alt-ignore \
+                    --ignore-status-codes 401 \
+                    --ignore-urls ${pkgs.lib.concatStringsSep "," ignoreUrls} \
+                    ${self.packages.${pkgs.system}.nemo-doc}/dist/
+                  '';
+                };
             };
 
           packages = {
@@ -154,6 +171,10 @@
                     dream2nix.modules.dream2nix.nodejs-package-lock-v3
                     dream2nix.modules.dream2nix.nodejs-devshell-v3
                   ];
+
+                  env = {
+                    ASTRO_TELEMETRY_DISABLED = 1;
+                  };
 
                   mkDerivation = {
                     src = ./.;
