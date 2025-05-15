@@ -13,7 +13,7 @@ const { formats, direction } = Astro.props;
 
 <Tabs>
     {
-      (Object.entries(formats) as [keyof typeof formats, Format][]).map(([key, format]) => {
+      (Object.entries(formats) as [keyof typeof formats, Format][]).map(([_key, format]) => {
         
         // Specify the styling of each parameter
         return ( 

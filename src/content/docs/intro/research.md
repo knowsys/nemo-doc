@@ -1,7 +1,7 @@
 ---
 title: Research and publications
 ---
-The main publication on [Nemo](index.mdx) currently is:
+The main publication on [Nemo](/nemo-doc) currently is:
 - Alex Ivliev, Lukas Gerlach, Simon Meusel, Jakob Steinberg, Markus Krötzsch Nemo: Your Friendly and Versatile Rule Reasoning Toolkit. Proceedings of the 21st International Conference on Principles of Knowledge Representation and Reasoning (KR 2024), volume 21 of Proceedings of the International Conference on Principles of Knowledge Representation and Reasoning. [PDF + bibtex](https://iccl.inf.tu-dresden.de/web/Inproceedings3390)
 
 A shorter overview can be found here:

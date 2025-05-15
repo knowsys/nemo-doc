@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-with-nix:
+    name: "Build nix package"
+    runs-on: ubuntu-latest
+    concurrency:
+      group: "build-nix"
+      cancel-in-progress: true
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@v12
+      - run: nix --print-build-logs build .#nemo-doc
+
+  check-links:
+    name: "Check for broken links"
+    runs-on: ubuntu-latest
+    concurrency:
+      group: "check-links"
+      cancel-in-progress: true
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@v12
+      - run: nix --print-build-logs run .#check-links

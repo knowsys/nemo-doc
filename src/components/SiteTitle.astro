@@ -1,7 +1,6 @@
 ---
-import type { Props } from '@astrojs/starlight/props';
 import { Image } from 'astro:assets';
-const { siteTitle, siteTitleHref } = Astro.props;
+const { siteTitleHref } = (Astro.locals as any).starlightRoute;
 
 import dark from '@assets/nemo-logo-rusty-bright-nomargin.svg';
 import light from '@assets/nemo-logo-rusty-nomargin.svg';
