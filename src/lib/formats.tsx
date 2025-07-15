@@ -1,97 +1,227 @@
-import {resource, delimiter,format,compression,limit,ignore_headers, http_headers,http_get_parameters,http_post_parameters,iri_fragment, base, endpoint,query ,type Parameter} from './parameters.tsx';
+import {
+  resource,
+  delimiter,
+  format,
+  compression,
+  limit,
+  ignore_headers,
+  quoting,
+  http_headers,
+  http_get_parameters,
+  http_post_parameters,
+  iri_fragment,
+  base,
+  endpoint,
+  query,
+  type Parameter,
+} from "./parameters.tsx";
 
 function createFormats<T extends Record<K, Format>, K extends string>(o: T) {
-  return o
+  return o;
 }
 
-export type Direction  = 'import' | 'export' | 'both';
+export type Direction = "import" | "export" | "both";
 
 export interface Format {
-    name: string,
-    io: Direction,
-    description: string,
-    parameters: Parameter[],
+  name: string;
+  io: Direction;
+  description: string;
+  parameters: Parameter[];
 }
 
 export const formats = createFormats({
-  csv : {
+  csv: {
     name: `csv`,
-    io: 'both',
-    description: 'Comma-separated values.',
-    parameters: [resource,format,compression,limit,ignore_headers,http_headers,http_get_parameters,http_post_parameters,iri_fragment],
+    io: "both",
+    description: "Comma-separated values.",
+    parameters: [
+      resource,
+      format,
+      compression,
+      limit,
+      ignore_headers,
+      quoting,
+      http_headers,
+      http_get_parameters,
+      http_post_parameters,
+      iri_fragment,
+    ],
   },
 
-  dsv : {
+  dsv: {
     name: `dsv`,
-    io: 'both',
-    description: 'Delimited separated values. (Like <code>csv</code>, but allows specifying different delimiters e.g. <code>delimiter=";"</code>)',
-    parameters: [delimiter,resource,format,compression,limit,ignore_headers,http_headers,http_get_parameters,http_post_parameters,iri_fragment],
+    io: "both",
+    description:
+      'Delimited separated values. (Like <code>csv</code>, but allows specifying different delimiters e.g. <code>delimiter=";"</code>)',
+    parameters: [
+      delimiter,
+      resource,
+      format,
+      compression,
+      limit,
+      ignore_headers,
+      quoting,
+      http_headers,
+      http_get_parameters,
+      http_post_parameters,
+      iri_fragment,
+    ],
   },
 
-  tsv : {
+  tsv: {
     name: `tsv`,
-    io: 'both',
-    description: 'Tab-separated values.',
-    parameters: [resource,format,compression,limit,ignore_headers,http_headers,http_get_parameters,http_post_parameters,iri_fragment],
+    io: "both",
+    description: "Tab-separated values.",
+    parameters: [
+      resource,
+      format,
+      compression,
+      limit,
+      ignore_headers,
+      quoting,
+      http_headers,
+      http_get_parameters,
+      http_post_parameters,
+      iri_fragment,
+    ],
   },
 
-  rdf : {
+  rdf: {
     name: `rdf`,
-    io: 'both',
-    description: 'Generic RDF format. The actual format will be guessed using the file name.',
-    parameters: [base, resource,format,compression,limit,http_headers,http_get_parameters,http_post_parameters,iri_fragment],
+    io: "both",
+    description:
+      "Generic RDF format. The actual format will be guessed using the file name.",
+    parameters: [
+      base,
+      resource,
+      format,
+      compression,
+      limit,
+      http_headers,
+      http_get_parameters,
+      http_post_parameters,
+      iri_fragment,
+    ],
   },
 
-  nquads : {
+  nquads: {
     name: `nquads`,
-    io: 'both',
-    description: 'RDF NQuads format.',
-    parameters: [resource,format,compression,limit,base,http_headers,http_get_parameters,http_post_parameters,iri_fragment],
+    io: "both",
+    description: "RDF NQuads format.",
+    parameters: [
+      resource,
+      format,
+      compression,
+      limit,
+      base,
+      http_headers,
+      http_get_parameters,
+      http_post_parameters,
+      iri_fragment,
+    ],
   },
 
-  trig : {
+  trig: {
     name: `trig`,
-    io: 'both',
-    description: 'RDF TriG format.',
-    parameters: [resource,format,compression,limit,base,http_headers,http_get_parameters,http_post_parameters,iri_fragment],
+    io: "both",
+    description: "RDF TriG format.",
+    parameters: [
+      resource,
+      format,
+      compression,
+      limit,
+      base,
+      http_headers,
+      http_get_parameters,
+      http_post_parameters,
+      iri_fragment,
+    ],
   },
 
-  ntriples : {
+  ntriples: {
     name: `ntriples`,
-    io: 'both',
-    description: 'RDF Ntriples format',
-    parameters: [resource,format,compression,limit,base,http_headers,http_get_parameters,http_post_parameters,iri_fragment],
+    io: "both",
+    description: "RDF Ntriples format",
+    parameters: [
+      resource,
+      format,
+      compression,
+      limit,
+      base,
+      http_headers,
+      http_get_parameters,
+      http_post_parameters,
+      iri_fragment,
+    ],
   },
 
-  rdfxml : {
+  rdfxml: {
     name: `rdfxml`,
-    io: 'both',
-    description: 'RDF/XML format.',
-    parameters: [resource,format,compression,limit,base,http_headers,http_get_parameters,http_post_parameters,iri_fragment],
+    io: "both",
+    description: "RDF/XML format.",
+    parameters: [
+      resource,
+      format,
+      compression,
+      limit,
+      base,
+      http_headers,
+      http_get_parameters,
+      http_post_parameters,
+      iri_fragment,
+    ],
   },
 
-  turtle : {
+  turtle: {
     name: `turtle`,
-    io: 'both',
-    description: 'RDF Turtle format.',
-    parameters: [resource,format,compression,limit,base,http_headers,http_get_parameters,http_post_parameters,iri_fragment],
+    io: "both",
+    description: "RDF Turtle format.",
+    parameters: [
+      resource,
+      format,
+      compression,
+      limit,
+      base,
+      http_headers,
+      http_get_parameters,
+      http_post_parameters,
+      iri_fragment,
+    ],
   },
 
-  sparql : {
+  sparql: {
     name: `sparql`,
-    io: 'import',
-    description: 'SPARQL query format.',
-    parameters: [endpoint,query,http_headers,http_get_parameters,http_post_parameters,iri_fragment],
+    io: "import",
+    description: "SPARQL query format.",
+    parameters: [
+      endpoint,
+      query,
+      http_headers,
+      http_get_parameters,
+      http_post_parameters,
+      iri_fragment,
+    ],
   },
 
-  json : {
+  json: {
     name: `json`,
-    io: 'import',
-    description: 'JSON triples.',
-    parameters: [resource,format,compression,http_headers,http_get_parameters,http_post_parameters,iri_fragment], 
+    io: "import",
+    description: "JSON triples.",
+    parameters: [
+      resource,
+      format,
+      compression,
+      http_headers,
+      http_get_parameters,
+      http_post_parameters,
+      iri_fragment,
+    ],
   },
 });
 
-export function supportsDirection(format: Format, direction: Direction): boolean{
- return format.io === direction || format.io === 'both';
+export function supportsDirection(
+  format: Format,
+  direction: Direction,
+): boolean {
+  return format.io === direction || format.io === "both";
 }
