@@ -1,7 +1,12 @@
 ---
-import  { type formats as formatsType, type Format, supportsDirection,type Direction } from '@lib/formats';
-import { Tabs, TabItem } from '@astrojs/starlight/components';
-import {type Type} from '@lib/parameters';
+import {
+  type formats as formatsType,
+  type Format,
+  supportsDirection,
+  type Direction,
+} from "@lib/formats";
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { type Type } from "@lib/parameters";
 
 interface Props {
   formats: typeof formatsType;
@@ -9,32 +14,49 @@ interface Props {
 }
 
 const { formats, direction } = Astro.props;
---- 
+---
 
 <Tabs>
-    {
-      (Object.entries(formats) as [keyof typeof formats, Format][]).map(([_key, format]) => {
-        
-        // Specify the styling of each parameter
-        return ( 
-          <TabItem label={format.name}>
-            <table>
-              <tbody>
-                {supportsDirection(format,direction) && format.parameters.map((param) => ( 
-                <tr>
-                  <td class="parameter-item text-sm leading-relaxed">
-                      <u><code>{param.name}</code></u><br />
-                      <span set:html={param.description}></span><br />
-                      <span>Accepted type(s): {param.types.map((type: Type) => type.description).join(', ') }</span><br />
-                      {param.example ? <span> Example: <code>{param.example}</code></span> : null}
-                  </td>
-                </tr>
-              ))}
-              </tbody>
-            </table>
-          </TabItem>
-        );
-    })
+  {
+    (Object.entries(formats) as [keyof typeof formats, Format][]).map(
+      ([_key, format]) => (
+        <TabItem label={format.name}>
+          <table>
+            <tbody>
+              {supportsDirection(format, direction) &&
+                format.parameters.map((param) => (
+                  <tr>
+                    <td class="parameter-item text-sm leading-relaxed">
+                      <u>
+                        <code>{param.name}</code>
+                      </u>
+                      <br />
+                      <span set:html={param.description} />
+                      <br />
+                      <span>
+                        Accepted type(s):{" "}
+                        {param.types
+                          .map((type: Type) => type.description)
+                          .join(", ")}
+                      </span>
+                      <br />
+                      {param.default ? (
+                        <span>
+                          Default value: <code>{param.default}</code>
+                        </span>
+                      ) : null}
+                      {param.example ? (
+                        <span>
+                          Example: <code>{param.example}</code>
+                        </span>
+                      ) : null}
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </TabItem>
+      ),
+    )
   }
-  </Tabs>
-
+</Tabs>
