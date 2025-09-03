@@ -39,7 +39,7 @@ export const format: Parameter = {
   name: "format",
   types: [Tuple, Value],
   description: `The input-format of the imported data.
-  Can be <code>int</code>, <code>double</code>, <code>string</code>, <code>rdf</code> or <code>skip</code>.`,
+  Can be <code>int</code>, <code>double</code>, <code>string</code>, <code>any</code> or <code>skip</code>.`,
 };
 
 export const compression: Parameter = {
