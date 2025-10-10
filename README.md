@@ -1,5 +1,6 @@
 # Nemo Documentation
 [![Built with Starlight](https://astro.badg.es/v2/built-with-starlight/tiny.svg)](https://starlight.astro.build)
+[![Gitter](https://badges.gitter.im/nemo/community.svg)](https://gitter.im/nemo/community)
 
 This repository contains the sources for the documentation of the [Nemo rule engine](https://github.com/knowsys/nemo).
 To read the documentation, please go to the official [Nemo documentation pages](https://knowsys.github.io/nemo-doc/).
