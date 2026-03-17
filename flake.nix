@@ -2,8 +2,7 @@
   description = "documentation for nemo, a datalog-based rule engine for fast and scalable analytic data processing in memory";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
-    utils.url = "github:gytis-ivaskevicius/flake-utils-plus";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
 
     dream2nix = {
       url = "github:nix-community/dream2nix";
@@ -14,29 +13,25 @@
   outputs =
     inputs@{
       self,
-      utils,
+      nixpkgs,
       dream2nix,
       ...
     }:
-    utils.lib.mkFlake {
-      inherit self inputs;
+    let
+      inherit (nixpkgs) lib;
+      systems = [
+        "x86_64-linux"
+        "aarch64-linux"
+        "aarch64-darwin"
+        "x86_64-darwin"
+      ];
+      forAllSystems' = systems: f: lib.genAttrs systems f;
+      forAllSystems = forAllSystems' systems;
 
-      overlays = {
-        default =
-          final: prev:
-          let
-            pkgs = self.packages.${final.system};
-          in
-          {
-            inherit (pkgs) nemo-doc;
-          };
-      };
-
-      outputsBuilder =
-        channels:
+      perSystem =
+        system:
         let
-          pkgs = channels.nixpkgs;
-
+          pkgs = nixpkgs.legacyPackages.${system};
           npmMeta = builtins.fromJSON (builtins.readFile ./package.json);
           inherit (npmMeta) version;
 
@@ -53,10 +48,8 @@
 
             modules = [
               paths
-
               (
                 {
-                  lib,
                   config,
                   dream2nix,
                   ...
@@ -134,7 +127,13 @@
         {
           apps =
             let
-              nemo-doc-preview = utils.lib.mkApp {
+              mkApp =
+                { drv, ... }:
+                {
+                  type = "app";
+                  program = lib.getExe drv;
+                };
+              nemo-doc-preview = mkApp {
                 drv = pkgs.writeShellApplication {
                   name = "nemo-doc-preview";
 
@@ -145,7 +144,7 @@
                   text = ''
                     export ASTRO_TELEMETRY_DISABLED=1
 
-                    cd ${self.packages.${pkgs.system}.nemo-doc}/lib/node_modules/nemo-doc/
+                    cd ${self.packages.${system}.nemo-doc}/lib/node_modules/nemo-doc/
                     node_modules/astro/astro.js preview
                   '';
                 };
@@ -162,7 +161,7 @@
                     "https://knowsys.github.io/nemo-doc/404/" # returns 404 by design
                   ];
                 in
-                utils.lib.mkApp {
+                mkApp {
                   drv = pkgs.writeShellScriptBin "check-links" ''
                     LANG="C.UTF-8" ${pkgs.html-proofer}/bin/htmlproofer \
                     --allow-hash-href \
@@ -170,7 +169,7 @@
                     --empty-alt-ignore \
                     --ignore-status-codes 401 \
                     --ignore-urls ${pkgs.lib.concatStringsSep "," ignoreUrls} \
-                    ${self.packages.${pkgs.system}.nemo-doc}/dist/
+                    ${self.packages.${system}.nemo-doc}/dist/
                   '';
                 };
             };
@@ -237,9 +236,22 @@
             ];
           };
 
-          formatter = channels.nixpkgs.nixfmt-rfc-style;
+          formatter = pkgs.nixfmt-rfc-style;
         };
+      shared = {
+        overlays = {
+          default = final: prev: {
+            inherit (self.packages.${final.stdenv.hostPlatform.system}) nemo-doc;
+          };
+        };
+      };
 
-    };
-
+    in
+    shared
+    // (lib.genAttrs [
+      "apps"
+      "packages"
+      "devShells"
+      "formatter"
+    ] (output: forAllSystems (system: (perSystem system).${output})));
 }
