@@ -11,13 +11,13 @@ Export directives are used to write computation results to files.
 
 ## Syntax
 The syntax of an export directive is as follows:
-```
+```nemo
 @export <predicate> :- <format>{<parameter>=<value>, ...} .
 ```
 
 For example, the following export writes a CSV file that contains two columns, with the first formatted as plain string and the second as an integer. The third parameter of the exported predicate `result` is skipped and will not be in the file:
 
-```
+```nemo
 @export result :- csv{resource="out.csv.gz", format=(string,int,skip)} .
 ```
 
@@ -38,6 +38,6 @@ Currently the following formats are supported:
 When using the [Nemo command-line client](/nemo-doc/installation/cli), some command-line options are available to override the export directives in the program, to set the output (base) directory, and to control if existing files should be overwritten.
 
 The parameters in export directives can also make use of format strings, e.g.,
-```
+```nemo
 @export table :- csv{resource = f"file-{?x}-{?y}.csv"}, ?x = "name", ?y = 42 .
 ```

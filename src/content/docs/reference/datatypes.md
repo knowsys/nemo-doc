@@ -4,7 +4,7 @@ title: Supported Datatypes
 
 In general, most values can be written in the long RDF syntax format `"lexical value"^^<datatype IRI>` and IRIs can always be written with surrounding `<...>`. Prefixes can be declared to abbreviate the IRIs, so the following defines the same facts as in the previous example:
 
-```
+```nemo
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 mydata(<a>,<b>) .
 mydata("hello"^^xsd:string, "42"^^xsd:integer) .

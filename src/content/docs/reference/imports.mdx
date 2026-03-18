@@ -11,14 +11,14 @@ Import directives are used to import external data resources as predicates.
 
 ## Syntax
 The general syntax of an import statement is as follows:
-```
+```nemo
 @import <predicate> :- <format>{<parameter>=<value>, ...} .
 ```
 In the example below `table` denotes the predicate that data is imported to, `csv` is the data format (comma-separated values),
 and `path/to/file.csv` is the relative path to the file. Instead of a local path, it is also possible to define a URL from
 which data should be downloaded, e.g., `resource = "https://example.org/file.csv"`.
 
-```
+```nemo
 @import table :- csv { resource="path/to/file.csv", format=(int,string, any)}.
 ```
 
@@ -35,7 +35,7 @@ Currently the following formats are supported:
 - `nquads`, `trig`: data is always imported in order "graphname, subject, predicate, object"
 - `ntriples`, `rdfxml`, `turtle`: data is always imported in order "subject, predicate, object"
 - `sparql`: can be used to make a `query` following the [SPARQL](https://www.w3.org/TR/sparql11-query/) syntax to a specific `endpoint`.  For example, the import statement below will retrieve the number of humans that are known to [Wikidata](https://www.wikidata.org/wiki/Wikidata:Main_Page):
-    ```
+    ```nemo
     @import nr_humans :- sparql{endpoint = <https://query.wikidata.org/sparql>, query="""
         PREFIX wd: <http://www.wikidata.org/entity/>
         PREFIX wdt: <http://www.wikidata.org/prop/direct/>
@@ -49,32 +49,15 @@ Currently the following formats are supported:
  (see table below, how each json type is represented).   
  The root object of the document always has object-id 0. Furthermore, for each object-id a triple of the form "object-id, `<type>`, type-id" is stored, where type-id is one of `"object"`, `"array"`, `"string"`, `"number"`, `"bool"` or `"null"`. Literal values will be assigned an object-id as well, with a triple of the form "object-id, `<value>`, literal-value"
 
-```
-JSON                              | nemo
-----------------------------------------------------------------------------------------------
-{"key1": value1, "key2": value2}  | (0, type, "object"),
-                                  | (0, "key1", 1),
-                                  | (0, "key2", 2),
-                                  | (1, type, ...),
-                                  | (2, type, ...)
-                                  |
-[value1, value2]                  | (0, type, "array"),
-                                  | (0, 0, 1),
-                                  | (0, 1, 2),
-                                  | (1, type, ...),
-                                  | (2, type, ...)
-                                  |
-"foobar"                          | (0, type, "string"),
-                                  | (0, value, "foobar")
-                                  |
-42.1337                           | (0, type, "number"),
-                                  | (0, value, 42.1337)
-                                  |
-true                              | (0, type, "bool"),
-                                  | (0, value, "true"^^<http://www.w3.org/2001/XMLSchema#boolean>)
-                                  |
-null                              | (0, type, "null")
-```
+| JSON                              | nemo |
+|----------------------------------|------------------------------------------------------------|
+| `{"key1": value1, "key2": value2}` | `(0, type, "object")`, `(0, "key1",   1)`,                                      `(0, "key2", 2)`,                                      `(1, type, ...)`,                                      `(2, type, ...)` |
+| `[value1, value2]`                 | `(0, type, "array")`,                                     `(0, 0, 1)`,                                     `(0, 1, 2)`,                                     `(1, type, ...)`,                                     `(2, type, ...)` |
+| `"foobar"`                         | `(0, type, "string")`,                                      `(0, value, "foobar")` |
+| `42.1337`                          | `(0, type, "number")`,                                     `(0, value, 42.1337)` |
+| `true`                             | `(0, type, "bool")`,                                      `(0, value, "true"^^<http://www.w3.org/2001/XMLSchema#boolean>)` |
+| `null`                             | `(0, type, "null")` |
+
 
 ### Available parameters
 
@@ -86,7 +69,7 @@ Some import formats, such as `csv`, do not specify how values in the file should
 For example, in CSV files, the string `123` will be interpreted as an integer, but the string `abc` as a constant name (relative IRI). 
 To control this in more detail, the parameter `format` can be used. It takes a list of format strings, like in the following example:
 
-```
+```nemo
 @import data :- csv{resource="file.csv", format=(string,string,int,any)} .
 ```
 
@@ -102,6 +85,6 @@ The same formats can be used in RDF imports as well. RDF has a more precise type
 
 ## Fstrings
 Fstrings are supported in the import statement as can be seen in the example below:
-```
+```nemo
 @import table :- csv{resource = f"file-{?x}-{?y}.csv"}, ?x = "name", ?y = 42 .
 ```

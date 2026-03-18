@@ -4,6 +4,8 @@ import starlight from "@astrojs/starlight";
 import tailwind from "@tailwindcss/vite";
 import { favicons } from "favicons";
 
+import nemoGrammar from "/src/assets/nemo.tmLanguage.json";
+
 const base = "/nemo-doc";
 
 async function faviconPlugin(options) {
@@ -55,6 +57,15 @@ export default defineConfig({
         "@fontsource/comfortaa/400.css",
         "@fontsource/comfortaa/600.css",
       ],
+      expressiveCode: {
+        themes: ["github-light", "github-dark"],
+        shiki: {
+          langs: [{ embeddedLangs: [], ...nemoGrammar }],
+          langAlias: {
+            nemo: "Nemo Rule Language",
+          },
+        },
+      },
       favicon: "/favicon.svg",
       social: [
         {
