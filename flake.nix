@@ -198,7 +198,7 @@
                   ...
                 }:
                 {
-                  name = "nemo-web";
+                  name = "nemo-doc";
                   inherit version;
 
                   imports = [
