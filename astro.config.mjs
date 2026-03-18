@@ -1,46 +1,11 @@
 import { defineConfig, passthroughImageService } from "astro/config";
 import starlight from "@astrojs/starlight";
-
+import favicons from "astro-favicons";
 import tailwind from "@tailwindcss/vite";
-import { favicons } from "favicons";
 
 import nemoGrammar from "/src/assets/nemo.tmLanguage.json";
 
 const base = "/nemo-doc";
-
-async function faviconPlugin(options) {
-  const icons = await favicons(
-    "./logo/build/without-text/nemo-logo-rusty-nomargin.svg",
-    options,
-  );
-  return {
-    name: "vite-plugin-favicons",
-    order: "pre",
-    sequential: true,
-    transform(src, id) {
-      if (id.endsWith("@astrojs/starlight/components/Page.astro")) {
-        src = src.replace("</head>", icons.html.join("") + "</head>");
-      }
-      return src;
-    },
-    configureServer(server) {
-      for (const icon of icons.images) {
-        server.middlewares.use(`/${icon.name}`, (req, res) => {
-          res.end(icon.contents);
-        });
-      }
-    },
-    generateBundle(options, bundle) {
-      for (const icon of icons.images) {
-        bundle[icon.name] = {
-          type: "asset",
-          fileName: icon.name,
-          source: icon.contents,
-        };
-      }
-    },
-  };
-}
 
 // https://astro.build/config
 export default defineConfig({
@@ -113,14 +78,11 @@ export default defineConfig({
         },
       ],
     }),
-  ],
-  image: { service: passthroughImageService() },
-  vite: {
-    plugins: [
-      tailwind(),
-      faviconPlugin({
-        path: base,
+    favicons({
+        input: "./logo/build/without-text/nemo-logo-rusty-nomargin.svg",
         background: "#134e4a",
+        name: "Nemo Rule Engine",
+        short_name: "Nemo",
         icons: {
           favicons: [
             "favicon.svg",
@@ -135,7 +97,12 @@ export default defineConfig({
           windows: false,
           yandex: false,
         },
-      }),
+      })
+  ],
+  image: { service: passthroughImageService() },
+  vite: {
+    plugins: [
+      tailwind(),
     ],
     resolve: {
       alias: {
