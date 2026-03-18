@@ -74,6 +74,7 @@ export default defineConfig({
             { label: "Datatypes", slug: "reference/datatypes" },
             { label: "Comments and attributes", slug: "reference/attributes" },
             { label: "Aggregates", slug: "reference/aggregates" },
+            { label: "Global parameters", slug: "reference/parameters" },
           ],
         },
       ],
