@@ -1,7 +1,7 @@
 import { defineConfig, passthroughImageService } from "astro/config";
 import starlight from "@astrojs/starlight";
 
-import tailwind from "@astrojs/tailwind";
+import tailwind from "@tailwindcss/vite";
 import { favicons } from "favicons";
 
 const base = "/nemo-doc";
@@ -102,11 +102,11 @@ export default defineConfig({
         },
       ],
     }),
-    tailwind(),
   ],
   image: { service: passthroughImageService() },
   vite: {
     plugins: [
+      tailwind(),
       faviconPlugin({
         path: base,
         background: "#134e4a",

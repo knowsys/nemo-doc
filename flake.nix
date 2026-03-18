@@ -80,7 +80,8 @@
                   deps =
                     { nixpkgs, ... }:
                     {
-                      inherit (nixpkgs) nodejs pagefind writeShellApplication;
+                      inherit (nixpkgs) pagefind writeShellApplication;
+                      nodejs = nixpkgs.nodejs_24;
                     };
 
                   nodejs-package-lock-v3 = {
@@ -214,7 +215,8 @@
                   deps =
                     { nixpkgs, ... }:
                     {
-                      inherit (nixpkgs) nodejs pagefind;
+                      nodejs = nixpkgs.nodejs_24;
+                      inherit (nixpkgs) pagefind;
                       inherit (nixpkgs.nodePackages) prettier;
                     };
 
