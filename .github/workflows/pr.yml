@@ -14,14 +14,14 @@ jobs:
       cancel-in-progress: true
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: nixbuild/nix-quick-install-action@v30
+      - uses: actions/checkout@v6
+      - uses: cachix/install-nix-action@v31
+      - uses: jlumbroso/free-disk-space@v1.3.1
         with:
-          nix_conf: |
-            keep-env-derivations = true
-            keep-outputs = true
+          swap-storage: false
+          tool-cache: true
       - name: Restore and save Nix store
-        uses: nix-community/cache-nix-action@v6
+        uses: nix-community/cache-nix-action@v7
         with:
           primary-key: nemo-nix-${{ runner.os }}-${{ hashFiles('**/*.nix', '**/flake.lock') }}
           restore-prefixes-first-match: nix-${{ runner.os }}-
@@ -39,18 +39,17 @@ jobs:
     concurrency:
       group: "check-links"
       cancel-in-progress: true
+    needs: build-with-nix
 
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: DeterminateSystems/nix-installer-action@v12
-      - uses: nixbuild/nix-quick-install-action@v30
+      - uses: actions/checkout@v6
+      - uses: cachix/install-nix-action@v31
+      - uses: jlumbroso/free-disk-space@v1.3.1
         with:
-          nix_conf: |
-            keep-env-derivations = true
-            keep-outputs = true
+          swap-storage: false
+          tool-cache: true
       - name: Restore and save Nix store
-        uses: nix-community/cache-nix-action@v6
+        uses: nix-community/cache-nix-action@v7
         with:
           primary-key: nemo-nix-${{ runner.os }}-${{ hashFiles('**/*.nix', '**/flake.lock') }}
           restore-prefixes-first-match: nix-${{ runner.os }}-
