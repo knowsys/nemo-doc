@@ -1,9 +1,43 @@
 import { defineConfig, passthroughImageService } from "astro/config";
 import starlight from "@astrojs/starlight";
-import favicons from "astro-favicons";
+import { favicons } from "favicons";
 import tailwind from "@tailwindcss/vite";
 
 import nemoGrammar from "/src/assets/nemo.tmLanguage.json";
+
+async function faviconPlugin(options) {
+  const icons = await favicons(
+    "./logo/build/without-text/nemo-logo-rusty-nomargin.svg",
+    options,
+  );
+  return {
+    name: "vite-plugin-favicons",
+    order: "pre",
+    sequential: true,
+    transform(src, id) {
+      if (id.endsWith("@astrojs/starlight/components/Page.astro")) {
+        src = src.replace("</head>", icons.html.join("") + "</head>");
+      }
+      return src;
+    },
+    configureServer(server) {
+      for (const icon of icons.images) {
+        server.middlewares.use(`/${icon.name}`, (req, res) => {
+          res.end(icon.contents);
+        });
+      }
+    },
+    generateBundle(options, bundle) {
+      for (const icon of icons.images) {
+        this.emitFile({
+          type: "asset",
+          fileName: icon.name,
+          source: icon.contents,
+        });
+      }
+    },
+  };
+}
 
 const base = "/nemo-doc";
 
@@ -79,8 +113,12 @@ export default defineConfig({
         },
       ],
     }),
-    favicons({
-        input: "./logo/build/without-text/nemo-logo-rusty-nomargin.svg",
+  ],
+  image: { service: passthroughImageService() },
+  vite: {
+    plugins: [
+      faviconPlugin({
+        path: base,
         background: "#134e4a",
         name: "Nemo Rule Engine",
         short_name: "Nemo",
@@ -98,11 +136,7 @@ export default defineConfig({
           windows: false,
           yandex: false,
         },
-      })
-  ],
-  image: { service: passthroughImageService() },
-  vite: {
-    plugins: [
+      }),
       tailwind(),
     ],
     resolve: {
