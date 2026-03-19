@@ -176,7 +176,17 @@ For a comprehensive list of built-in functions and predicates, see the section o
 
 Nemo supports negation to check for the absence of facts, but requires that there are no recursive dependency cycles that involve negation (this is called *stratification*). To negate an atom, `~` is used in front of it in rule bodies.
 
-*todo: expand documentation*
+As an example, the following program computes people who where born in Dresden and are still alive:
+```nemo
+hasDied(?person) :- dateOfDeath(?person, ?date) .
+result(?person) :- bornIn(?person, Dresden), ~hasDied(?person) .
+```
+
+Nemo also allows us to write this as a single rule:
+```nemo
+result(?person) :- bornIn(?person, Dresden), ~dateOfDeath(?person, ?date) .
+```
+Note that here the variable `?date` is implicitly assumed to be quantified below the negation (i.e., we are looking for a person such that for every possible date, the person did not die on that date, as opposed to finding persons for which there is a date they did not die on).
 
 ## Existential rules
 
