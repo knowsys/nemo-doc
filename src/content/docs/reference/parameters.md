@@ -16,7 +16,7 @@ Afterwards, `$name` can be used throughout the program (in rules and in facts) l
 @parameter $with_default = <https://example.org/default> .
 ```
 
-Values for parameters can be specified [on the command line](/nemo-doc/installation/cli#setting-parameters) with the `--param` option, as follows:
+Values for parameters can be specified [on the command line](/nemo-doc/installation/cli/index.html#setting-parameters) with the `--param` option, as follows:
 ```bash
 nmo rules.rls --param "name=<https://example.org/name>" .
 ```

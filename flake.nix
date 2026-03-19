@@ -157,9 +157,11 @@
 
               check-links =
                 let
+                  deployBase = "https://knowsys.github.io";
+                  deployedAt = "${deployBase}/nemo-doc";
                   ignoreUrls = [
                     "http://xmlns.com/foaf/spec/" # no HTTPS
-                    "https://knowsys.github.io/nemo-doc/404/" # returns 404 by design
+                    "${deployedAt}/404/" # returns 404 by design
                   ];
                 in
                 mkApp {
@@ -170,6 +172,7 @@
                     --empty-alt-ignore \
                     --ignore-status-codes 401 \
                     --ignore-urls ${pkgs.lib.concatStringsSep "," ignoreUrls} \
+                    --swap-urls "^${lib.replaceString ":" "\\:" deployBase}/:/" \
                     ${self.packages.${system}.nemo-doc}/dist/
                   '';
                 };
