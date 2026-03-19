@@ -129,4 +129,5 @@ export const query: Parameter = {
   types: [String],
   description:
     "The SPARQL query sent to the endpoint. The query will be validated before sending. Make sure to include all necessary prefixes.",
+  default: "SELECT ?s ?p ?o WHERE { ?s ?p ?o }",
 };
