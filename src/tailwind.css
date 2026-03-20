@@ -1,3 +1,26 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@layer base, starlight, theme, components, utilities;
+
+@import "@astrojs/starlight-tailwind";
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+
+@theme {
+    --color-nemo-blue-200: #8cbfcc;
+    --color-nemo-blue-600: #2a768a;
+    --color-nemo-blue-900: #18434e;
+    --color-nemo-blue-950: #0c2227;
+    --color-rust: #9c6f30;
+    --color-accent-200: var(--color-nemo-blue-200);
+    --color-accent-600: var(--color-nemo-blue-600);
+    --color-accent-900: var(--color-nemo-blue-900);
+    --color-accent-950: var(--color-nemo-blue-950);
+    /*
+	Configure your Tailwind theme that will be used by Starlight.
+	https://starlight.astro.build/guides/css-and-tailwind/#styling-starlight-with-tailwind
+	*/
+}
+
+/*
+ Add additional Tailwind styles to this file:
+ https://tailwindcss.com/docs/adding-custom-styles#using-custom-css
+*/

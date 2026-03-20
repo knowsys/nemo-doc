@@ -5,7 +5,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 Nemo is controlled by programs in a simple rule language, where a *rule* is a basic "if-then" statement that describes how new information is derived from given information. For example, the following rule states that adults are persons who are at least 18 years old (the "then" part is on the left of `:-`, as is common in logic programming):
 
-```
+```nemo
 adult(?X) :- person(?X), age(?X,?age), ?age >= 18.
 ```
 
@@ -21,7 +21,7 @@ The core of Nemo is the well-known rule language Datalog (see [Wikipedia](https:
 
 <Tabs>
   <TabItem label="code" icon="seti:html">
-    ```
+    ```nemo
   % Facts:
   father(alice, bob).
   mother(bob, carla).
@@ -55,14 +55,14 @@ The question mark `?` signifies *variables*, which act as placeholders for arbit
 As the final rule shows (and in agreement with real life), this is not the only way in which a parent relation can be established.
 Given the initial question mark, variables can be named as desired, so one can also use speaking names to enhance readability:
 
-```
+```nemo
 parent(?child, ?mother) :- mother(?child, ?mother) .
 ```
 
 The scope of all variables is local to a single rule, so the names chosen in one rule are independent from the names chosen in any other rule.
 Rule bodies can consist of several pre-conditions, separated by a comma (to be read as *and*):
 
-```
+```nemo
 ancestor(?X,?Y) :- parent(?X, ?Y) .
 ancestor(?X,?Z) :- ancestor(?X, ?Y), parent(?Y, ?Z) .
 ancestorOfAlice(?X) :- ancestor(alice,?X).
@@ -85,13 +85,13 @@ There are three basic forms for predicate names and abstract constant names in N
 - `alice`, `mother`: Simple string names that can start with a letter and that may also contain numbers or `_`
 - `<http://www.wikidata.org/entity/Q1172264>`: Complete [IRIs](https://en.wikipedia.org/wiki/Internationalized_Resource_Identifier) of whatever form IRIs are allowed to take (this is not limited to URLs but can also be something like `<tel:+12-3456-789>`, and is not restricted to existing protocols like `http` or `tel`).
 - `wikidata:Q1172264`: A prefixed name that abbreviates a long IRI. For this to work, the prefix must have been declared in the file, for example like this:
-  ```
+  ```nemo
   @prefix wikidata: <http://www.wikidata.org/entity/> .
   ```
 
 Internally, Nemo treats all of these as IRIs. Prefixed names are expanded by concatenating prefix and local name (so `wikidata:Q1172264` would be another way of writing `<http://www.wikidata.org/entity/Q1172264>`), and simple string names are interpreted as *relative* IRIs (so `alice` would be another way of writing `<alice>`). You can write your predicate names and constants as you prefer, or use own prefixes as a mere way of adding some "namespaces" to your identifiers.
 If you want to use a default prefix for all non-absolute predicate names and non-absolute literals, use the `@base` notation:
-```
+```nemo
 @base <http://www.wikidata.org/entity/>.
 animal("dog","cat").
 <test>(<mouse>,<turtle>).
@@ -103,7 +103,7 @@ In the example above, the first fact will be expanded to `http://www.wikidata.or
 
 Besides IRIs, values in Nemo can have a whole range of other datatypes, for example to represent strings or numbers. Similar to RDF and SPARQL, Nemo let's you use any type of data in any place, without imposing rigid schema constraints. This is illustrated with the following example:
 
-```
+```nemo
 mydata(a,b) .
 mydata("hello", 42) .
 mydata(3.14, "2023-06-19"^^<http://www.w3.org/2001/XMLSchema#date>) .
@@ -123,7 +123,7 @@ The section on [datatypes](/nemo-doc/reference/datatypes) provides more informat
 ## Working with external data
 
 Nemo allows importing external data files as predicates. The general syntax for this is as follows:
-```
+```nemo
 @import table :- csv{resource = "path/to/file.csv"} .
 ```
 
@@ -132,7 +132,7 @@ and `path/to/file.csv` is the path to the file. Instead of a local path, it is a
 which data should be downloaded, e.g., `resource = <https://example.org/file.csv>`.
 
 Nemo also supports [SPARQL](https://www.w3.org/TR/sparql11-query/) queries. This allows to retrieve specific information from online knowledge bases. For example the rule below will retrieve the number of all humans listed in [Wikidata](https://www.wikidata.org/wiki/Wikidata:Main_Page) and assign the data to the predicate `nr_humans`.
-```
+```nemo
 @import nr_humans :- sparql{endpoint = "https://query.wikidata.org/sparql", query="""
     PREFIX wd: <http://www.wikidata.org/entity/>
     PREFIX wdt: <http://www.wikidata.org/prop/direct/>
@@ -149,7 +149,7 @@ The section on [importing data](/nemo-doc/reference/imports) provides informatio
 
 To return or store results, you can use `@export` directives, which work analogously to `@import`. For example, the following directive exports the data for predicate `result` to an RDF file in Turtle format:
 
-```
+```nemo
 @export result :- turtle{resource="out.ttl"} .
 ```
 
@@ -159,7 +159,7 @@ Export directives largely work like imports, and support the same formats (such 
 
 Nemo offers many functions and predicates to work with data. In contrast to the user-defined symbols, such functions and predicates are called *built-ins*. Many functions are made for particular types of input data, such as the `STRLEN` function that computes the length of a string. However, built-ins are generally robust and can be used with all kinds of data: if they do not return any valid result for a given input (e.g., when calling `STRLEN` with an integer number as input), then the rule where they are used is not applicable to this data. Here is an example:
 
-```
+```nemo
 input(42) .
 input("example") .
 
@@ -176,7 +176,17 @@ For a comprehensive list of built-in functions and predicates, see the section o
 
 Nemo supports negation to check for the absence of facts, but requires that there are no recursive dependency cycles that involve negation (this is called *stratification*). To negate an atom, `~` is used in front of it in rule bodies.
 
-*todo: expand documentation*
+As an example, the following program computes people who where born in Dresden and are still alive:
+```nemo
+hasDied(?person) :- dateOfDeath(?person, ?date) .
+result(?person) :- bornIn(?person, Dresden), ~hasDied(?person) .
+```
+
+Nemo also allows us to write this as a single rule:
+```nemo
+result(?person) :- bornIn(?person, Dresden), ~dateOfDeath(?person, ?date) .
+```
+Note that here the variable `?date` is implicitly assumed to be quantified below the negation (i.e., we are looking for a person such that for every possible date, the person did not die on that date, as opposed to finding persons for which there is a date they did not die on).
 
 ## Existential rules
 
@@ -184,7 +194,7 @@ Nemo supports so-called *existential rules*, which can entail that some values *
 
 For example, the following tribute to the [FOAF](http://xmlns.com/foaf/spec/) project loads RDF data about people and arranges it in a table. The first rule covers the case where given name and family name are available. The second rule then states that already the availability of the given name should be sufficient to get a row in the `person` table: the existential variable `!family` can be seen as a placeholder value  in this case:
 
-```
+```nemo
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @import rdf: ntriples{resource="mydata.nt.gz"} .
 person(?x, ?given, ?family) :- rdf(?x, foaf:givenName, ?given), rdf(?x, foaf:familyName, ?family) .
@@ -195,7 +205,7 @@ Nemo is smart enough to prioritize the first rule, and to apply the second only 
 
 Existential rules have several other possible uses besides acting as placeholders for missing values:
 - They can be used for creating unique identifiers ("keys") for tuples. The following rules create the union of two inputs relations, and create a key for each, but Nemo will still make sure that each tuple only has one key (even if it occurs in both inputs):
-```
+```nemo
 result(?v1,?v2,?v3,!key) :- inputA(?v1,?v2,?v3) .
 result(?v1,?v2,?v3,!key) :- inputB(?v1,?v2,?v3) .
 ```
@@ -210,7 +220,7 @@ There are several ways of processing existential variables in rules. The approac
 
 Aggregates are a powerful feature of Nemo that allow you to compute statistics over groups of data. The following example computes the average age of people in a table:
 
-```
+```nemo
 sum(#sum(?age)) :- person(_, _, ?age).
 count(#count(?id)) :- person(?id, _, _).
 

@@ -14,11 +14,25 @@ For an overview of the supported command line options run the following:
 nmo --help
 ```
 
+## Setting parameters
+[Global parameters](/nemo-doc/reference/parameters) can be set on the command line using the `--param` option. Consider a `rules.rls` file with a parameter, as follows:
+```nemo title="rules.rls"
+@parameter x .
+test($x) .
+@export test :- csv{} .
+```
+
+```bash
+nmo rules.rls --param "x=hello world!"
+```
+
+This produces a single fact `"hello world!"` for predicate `test`.
+
 ## Tracing facts
 
 You can specify facts to be traced via the command line. Example:
 
-```txt title="rules.rls"
+```nemo title="rules.rls"
 e(1, 2).
 e(2, 3).
 a(3).

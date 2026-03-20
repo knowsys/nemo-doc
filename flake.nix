@@ -80,7 +80,8 @@
                   deps =
                     { nixpkgs, ... }:
                     {
-                      inherit (nixpkgs) nodejs pagefind writeShellApplication;
+                      inherit (nixpkgs) pagefind writeShellApplication;
+                      nodejs = nixpkgs.nodejs_24;
                     };
 
                   nodejs-package-lock-v3 = {
@@ -156,9 +157,11 @@
 
               check-links =
                 let
+                  deployBase = "https://knowsys.github.io";
+                  deployedAt = "${deployBase}/nemo-doc";
                   ignoreUrls = [
                     "http://xmlns.com/foaf/spec/" # no HTTPS
-                    "https://knowsys.github.io/nemo-doc/404/" # returns 404 by design
+                    "${deployedAt}/404/" # returns 404 by design
                   ];
                 in
                 mkApp {
@@ -169,6 +172,7 @@
                     --empty-alt-ignore \
                     --ignore-status-codes 401 \
                     --ignore-urls ${pkgs.lib.concatStringsSep "," ignoreUrls} \
+                    --swap-urls "^${lib.replaceString ":" "\\:" deployBase}/:/" \
                     ${self.packages.${system}.nemo-doc}/dist/
                   '';
                 };
@@ -198,7 +202,7 @@
                   ...
                 }:
                 {
-                  name = "nemo-web";
+                  name = "nemo-doc";
                   inherit version;
 
                   imports = [
@@ -214,7 +218,8 @@
                   deps =
                     { nixpkgs, ... }:
                     {
-                      inherit (nixpkgs) nodejs pagefind;
+                      nodejs = nixpkgs.nodejs_24;
+                      inherit (nixpkgs) pagefind;
                       inherit (nixpkgs.nodePackages) prettier;
                     };
 

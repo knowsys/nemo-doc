@@ -23,7 +23,7 @@ The following aggregate functions are available:
 
 As mentioned in the reference above, aggregate functions only consider distinct values. This means that if you have multiple tuples with the same value, they will only be counted once. For example, if you have a table of people with their names, ages, and salaries:
 
-```
+```nemo
 person(1, anna, 18, 350).
 person(2, bob, 20, 400).
 person(3, carl, 18, 400).
@@ -35,7 +35,7 @@ You can count the number of distinct ages with the following rule:
 
 <Tabs>
   <TabItem label="code" icon="seti:html">
-    ```
+    ```nemo
     distinctAges(#count(?AGE)) :- person(_, _, ?AGE, _).
     ```
   </TabItem>
@@ -59,7 +59,7 @@ we can count the number people as follows:
 
 <Tabs>
   <TabItem label="code" icon="seti:html">
-    ```
+    ```nemo
     distinctPeople(#count(?AGE, ?NAME)) :- person(_, ?NAME, ?AGE, _).
     ```
   </TabItem>
@@ -74,7 +74,7 @@ The same logic applies to the `#sum` aggregate function. Naively using `#sum` on
 
 <Tabs>
   <TabItem label="code" icon="seti:html">
-    ```
+    ```nemo
     fakeTotal(#sum(?SALARY)) :- person(_, _, _, ?SALARY).
     ```
   </TabItem>
@@ -89,7 +89,7 @@ To fix this, you can use a unique variable, such as the ID, to sum up all salari
 
 <Tabs>
   <TabItem label="code" icon="seti:html">
-    ```
+    ```nemo
     totalSalary(#sum(?SALARY, ?ID)) :- person(?ID, _, _, ?SALARY).
     ```
   </TabItem>
@@ -106,7 +106,7 @@ Usually, aggregate functions are not used in isolation, but occur in a head alon
 
 <Tabs>
   <TabItem label="code" icon="seti:html">
-    ```
+    ```nemo
     peopleWithSameAge(?AGE, #count(?ID)) :- person(?ID, _, ?AGE, _).
     ```
   </TabItem>

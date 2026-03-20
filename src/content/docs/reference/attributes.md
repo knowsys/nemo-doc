@@ -18,7 +18,7 @@ editor features might also be adjusted to use these special comments.
 
 A file comment should be at the very top of the program, and typically uses a title-like first line, like this:
 
-```
+```nemo
 %! Hello World in Nemo
 %!
 %! This program returns a single string message.
@@ -28,7 +28,7 @@ message("Hello world") .
 
 A statement comment must be immediately before a statement, like this:
 
-```
+```nemo
 %%% A simple fact.
 %%% This fact holds the string message we want to return.
 message("Hello world") .
@@ -39,7 +39,7 @@ message("Hello world") .
 Attributes are annotations applied to rules and other statements. They provide additional context or configuration for aspects that are
 unrelated to the semantics of the Nemo program (e.g., for documentation or compiler hints). Attributes are written like this:
 
-```
+```nemo
 #[attribute_name(parameter_1, parameter_2, ...)]
 parent(?p, ?c) :- child(?c, ?p) .
 ```

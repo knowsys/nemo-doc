@@ -36,7 +36,7 @@ that starts at the given index and extends to the end of the string. Optionally,
 
 Format strings are denoted with a leading `f` before the double quoted string. They allow for arbitrary expressions to be embedded into the string using curly braces `{}`. Format strings are equivalent to using the `CONCAT` builtin function in combination with `STR` for converting the result of the expressions into strings. 
 
-```
+```nemo
 out(f"result: {?x + ?y}") :- in(?x, ?y) .
 ```
 
@@ -99,7 +99,7 @@ Nemo provides built-in functions to check whether a value is of a certain type:
 
 For example, the following program computes `result("true"^^<http://www.w3.org/2001/XMLSchema#boolean>)`:
 
-```
+```nemo
 data("1.0") .
 result(isString(?x)) :- data(?x) .
 ```
@@ -108,11 +108,11 @@ result(isString(?x)) :- data(?x) .
 
 Built-in functions can be nested arbitrarily. For example, the following is a valid expression:
 
-```
+```nemo
 result(?s) :- temp(?t), ?s = CONCAT(UCASE("temp: "), STR(?t)) .
 ```
 
-***Known restriction in version 0.7:***
+***Known restriction in version 0.10:***
 Currently, infix operators are not allowed within nested terms. As a workaround, it is possible to use the prefix-notation for such functions.
 
 | Infix    | Name          |
@@ -130,7 +130,7 @@ Currently, infix operators are not allowed within nested terms. As a workaround,
 
 As an example, consider the following rule:
 
-```
+```nemo
 r(1, 0).
 r(1, 1).
 r(2, 2).

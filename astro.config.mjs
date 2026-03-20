@@ -1,10 +1,9 @@
 import { defineConfig, passthroughImageService } from "astro/config";
 import starlight from "@astrojs/starlight";
-
-import tailwind from "@astrojs/tailwind";
 import { favicons } from "favicons";
+import tailwind from "@tailwindcss/vite";
 
-const base = "/nemo-doc";
+import nemoGrammar from "/src/assets/nemo.tmLanguage.json";
 
 async function faviconPlugin(options) {
   const icons = await favicons(
@@ -30,15 +29,17 @@ async function faviconPlugin(options) {
     },
     generateBundle(options, bundle) {
       for (const icon of icons.images) {
-        bundle[icon.name] = {
+        this.emitFile({
           type: "asset",
           fileName: icon.name,
           source: icon.contents,
-        };
+        });
       }
     },
   };
 }
+
+const base = "/nemo-doc";
 
 // https://astro.build/config
 export default defineConfig({
@@ -55,6 +56,15 @@ export default defineConfig({
         "@fontsource/comfortaa/400.css",
         "@fontsource/comfortaa/600.css",
       ],
+      expressiveCode: {
+        themes: ["github-light", "github-dark"],
+        shiki: {
+          langs: [{ embeddedLangs: [], ...nemoGrammar }],
+          langAlias: {
+            nemo: "Nemo Rule Language",
+          },
+        },
+      },
       favicon: "/favicon.svg",
       social: [
         {
@@ -98,11 +108,11 @@ export default defineConfig({
             { label: "Datatypes", slug: "reference/datatypes" },
             { label: "Comments and attributes", slug: "reference/attributes" },
             { label: "Aggregates", slug: "reference/aggregates" },
+            { label: "Global parameters", slug: "reference/parameters" },
           ],
         },
       ],
     }),
-    tailwind(),
   ],
   image: { service: passthroughImageService() },
   vite: {
@@ -110,6 +120,8 @@ export default defineConfig({
       faviconPlugin({
         path: base,
         background: "#134e4a",
+        name: "Nemo Rule Engine",
+        short_name: "Nemo",
         icons: {
           favicons: [
             "favicon.svg",
@@ -125,6 +137,7 @@ export default defineConfig({
           yandex: false,
         },
       }),
+      tailwind(),
     ],
     resolve: {
       alias: {
