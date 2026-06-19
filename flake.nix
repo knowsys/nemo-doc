@@ -146,7 +146,7 @@
                     export ASTRO_TELEMETRY_DISABLED=1
 
                     cd ${self.packages.${system}.nemo-doc}/lib/node_modules/nemo-doc/
-                    node_modules/astro/astro.js preview
+                    node_modules/astro/bin/astro.mjs preview
                   '';
                 };
               };
