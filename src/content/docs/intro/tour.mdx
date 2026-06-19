@@ -221,10 +221,10 @@ There are several ways of processing existential variables in rules. The approac
 Aggregates are a powerful feature of Nemo that allow you to compute statistics over groups of data. The following example computes the average age of people in a table:
 
 ```nemo
-sum(#sum(?age)) :- person(_, _, ?age).
+total_ages(#sum(?age, ?id)) :- person(?id, _, ?age).
 count(#count(?id)) :- person(?id, _, _).
 
-avg(DOUBLE(?sum) / ?count) :- sum(?sum), count(?count).
+avg(DOUBLE(?sum) / ?count) :- total_ages(?sum), count(?count).
 
 person(1, "Alice", 25).
 person(2, "Bob", 30).
